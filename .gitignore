@@ -146,4 +146,6 @@ dmypy.json
 .vscode/
 .history/
 .flakeheaven_cache/
+node_modules/
+.docusaurus/
 tutorials/in_depth/results/

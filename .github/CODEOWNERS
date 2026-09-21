@@ -1,1 +1,2 @@
-@lava-nc/lava-committers
+# Add a DarbotLM team with explicit repository access when maintainers assign it.
+# Upstream Lava's team does not own reviews in this fork.

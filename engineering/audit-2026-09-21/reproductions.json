@@ -1,0 +1,142 @@
+[
+  {
+    "id": "R01",
+    "diagnostic": "Import after application selects spawn",
+    "observed": {
+      "exit_code": 1,
+      "last_stderr": "RuntimeError: context has already been set"
+    }
+  },
+  {
+    "id": "R02",
+    "diagnostic": "Runtime context manager as binding",
+    "observed": {
+      "bound_is_runtime": false,
+      "bound_type": "NoneType"
+    }
+  },
+  {
+    "id": "C01",
+    "diagnostic": "Invalid RunSteps inputs",
+    "observed": [
+      {
+        "value": "-1",
+        "accepted": true
+      },
+      {
+        "value": "1.5",
+        "accepted": true
+      },
+      {
+        "value": "True",
+        "accepted": true
+      }
+    ]
+  },
+  {
+    "id": "C02",
+    "diagnostic": "Process construction changes host root logger",
+    "observed": {
+      "created_processes": 3,
+      "added_root_handlers": 3
+    }
+  },
+  {
+    "id": "U01",
+    "diagnostic": "Checkpoint path symmetry and list validation",
+    "observed": {
+      "saved_with_extension": true,
+      "load_same_argument": "OSError",
+      "accepted_invalid_list": true
+    }
+  },
+  {
+    "id": "U02",
+    "diagnostic": "Read-only sparse input to a query helper",
+    "observed": "ValueError: assignment destination is read-only"
+  },
+  {
+    "id": "U03",
+    "diagnostic": "Sparse query restores input after downstream failure",
+    "observed": {
+      "before": [
+        0.0,
+        2.0
+      ],
+      "after": [
+        1.0,
+        2.0
+      ]
+    }
+  },
+  {
+    "id": "K01",
+    "diagnostic": "Compiler flatten helper with 2000 siblings",
+    "observed": "RecursionError: maximum recursion depth exceeded while calling a Python object"
+  },
+  {
+    "id": "R03",
+    "diagnostic": "Array index is validated after SET header transmission",
+    "observed": {
+      "error": "ValueError: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()",
+      "messages_sent_before_error": 3
+    }
+  },
+  {
+    "id": "R04",
+    "diagnostic": "Runtime get index zero",
+    "observed": {
+      "index": 0,
+      "returned": [
+        10.0,
+        20.0
+      ]
+    }
+  },
+  {
+    "id": "P01",
+    "diagnostic": "DelaySparse int32 delays",
+    "observed": "ValueError: DelaySparse Process 'delays' expects integer value(s), got   (0, 1)\t1."
+  },
+  {
+    "id": "L01",
+    "diagnostic": "Learning rule fractional epoch and NaN tau",
+    "observed": {
+      "epoch": 1.5,
+      "nan_tau": true
+    }
+  },
+  {
+    "id": "REJECT01",
+    "diagnostic": "Check suspected ConvInTime cross-row roll defect",
+    "observed": {
+      "flat_roll_equals_axis_roll": true
+    }
+  },
+  {
+    "id": "K02",
+    "diagnostic": "Two output ports each with one connection configuration",
+    "observed": "IndexError: list index out of range"
+  },
+  {
+    "id": "C03",
+    "diagnostic": "Independent iteration after an early break",
+    "observed": {
+      "first": 1,
+      "new_iteration": [
+        2,
+        3
+      ]
+    }
+  },
+  {
+    "id": "I01",
+    "diagnostic": "Dataloader zero interval",
+    "observed": "ZeroDivisionError: integer division or modulo by zero"
+  },
+  {
+    "id": "R05",
+    "diagnostic": "Shared memory cleanup before manager starts",
+    "observed": "AttributeError: 'SharedMemoryManager' object has no attribute 'shutdown'"
+  }
+]

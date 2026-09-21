@@ -1,237 +1,53 @@
-# THIS PROJECT IS ARCHIVED   
-Intel will not provide or guarantee development of or support for this project, including but not limited to, maintenance, bug fixes, new releases or updates. Patches to this project are no longer accepted by Intel. If you have an ongoing need to use this project, are interested in independently developing it, or would like to maintain patches for the community, please create your own fork of the project.  
+# LavaLM
 
-## What's next
-Intel is developing the next-generation Loihi architecture and SDK to power the coming era physical AI. The new SDK is built on open-standard AI frameworks to lower the adoption barrier while enabling maximum performance and efficiency on Loihi.
-	
-All Lava repositories are archived. Stay tuned for announcements about our new SDK and next generation Loihi processor.
+**Open Source Language Model Framework for Neuro Semantic Computing and Machine Learning**
 
-Thank you all for your contribution to Lava over the past years!
+LavaLM is DarbotLM's independent continuation of the open-source Lava neuromorphic framework. The current implementation provides process graphs, CPU process models, a compiler, and a message-passing runtime. Neurosemantic schemas, language-model tooling, agent interfaces, parallel classifiers, and knowledge-graph applications are the development direction; they are not implemented capabilities of this maintenance release.
 
----
+Start with the [wiki](website/docs/intro.md), [architecture](website/docs/architecture.md), [API guide](website/docs/api.md), and [engineering specifications](website/docs/engineering/overview.md).
 
-![image](https://user-images.githubusercontent.com/68661711/135301797-400e163d-71a3-45f8-b35f-e849e8c74f0c.png)
-<p align="center"><b>
-  A Software Framework for Neuromorphic Computing
-</b></p>
+## Install from source
 
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/40792fa7db054279bdf7532e36f0cfab)](https://app.codacy.com/gh/lava-nc/lava/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
-[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/40792fa7db054279bdf7532e36f0cfab)](https://app.codacy.com/gh/lava-nc/lava/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
-
-If you like lava and want to support it, the easiest way is to star our repo (click star in the upper right corner).
-
-# Overview
-
-Lava is an open source SW framework to develop applications for
-neuromorphic hardware architectures. It provides developers with the abstractions
-and tools to develop distributed and massively parallel applications. These
-applications can be deployed to heterogeneous system architectures containing
-conventional processors as well as neuromorphic chips that exploit event-based
-message passing for communication. The Lava framework comprises high-level
-libraries for deep learning, constrained optimization, and others for productive
-algorithm development. It also includes tools to map those algorithms to
-different types of hardware architectures.
-
-
-<p align="center">
-<img src="https://user-images.githubusercontent.com/68661711/135412508-4a93e20a-8b64-4723-a69b-de8f4b5902f7.png" alt="Lava organization" width="500"/>
-</p>
-
-Today Lava supports conventional CPUs and Intel's Loihi architecture, but
-its compiler and runtime are open to extension for other architectures.
-
-To learn more about the Lava Software Framework, please refer to the
-detailed documentation at http://lava-nc.org/.
-
-The Lava framework is licensed with permissive open source
-BSD 3 licensing to highly encourage community contributions.
-Lower level components in Lava, that map algorithms to different
-hardware backends, are licensed with the LGPL-2.1 license to discourage
-commercial proprietary forks. Specific sensitive components
-supporting architectures like Intel Loihi may remain proprietary
-to Intel and will be shared as extensions to eligible users.
-
->### Lava extension for Intel's Loihi
->The Lava extension for Loihi is available for members of the Intel Neuromorphic Research Community (INRC). The extension enables execution of Lava on Intel's Loihi hardware platform.
->
->Developers interested in using Lava with Loihi systems need to join the INRC. Loihi 1 and 2 research systems are currently not available commercially. Once a member of the INRC, developers will gain access to cloud-hosted Loihi systems or may be able to obtain physical Loihi systems on a loan basis.
->
->To join the INRC, visit [http://neuromorphic.intel.com](http://neuromorphic.intel.com) or email at [inrc_interest@intel.com](mailto:inrc_interest@intel.com).
->
-> If you are already a member of the INRC, please read how to [get started with the Lava extension for Loihi](https://intel-ncl.atlassian.net/wiki/spaces/NAP/pages/1785856001/Get+started+with+the+Lava+extension+for+Loihi). This page is **only** accessible to members of the INRC.
-
-
-# Getting started
-The open-source Lava Software framework and its complementary algorithm
-libraries are hosted at [http://github.com/lava-nc](http://github.com/lava-nc) and
-the framework supports at minimimum CPU backends.
-
-Note that you should install the core Lava repository [lava](http://github.com/lava-nc/lava)
-before installing other Lava libraries such as [lava-optimization](http://github.com/lava-nc/lava-optimization)
-or [lava-dl](http://github.com/lava-nc/lava-dl).
-
-## Installing Lava from source
-
-If you are interested in developing in Lava and modifying Lava source code,
-we recommend cloning the repository and using `poetry` to setup Lava. You
-will need to install the `poetry` Python package.
-
-Open a **python 3** terminal and run based on the OS you are on:
-
-### Linux/MacOS
+Use Python 3.10 and a fresh environment. Linux is the primary CPU validation target; CI also exercises macOS. Python modernization and Windows runtime support require separate validation.
 
 ```bash
-cd $HOME
-curl -sSL https://install.python-poetry.org | python3 -
-git clone git@github.com:lava-nc/lava.git
-cd lava
-git checkout v0.9.0
-./utils/githook/install-hook.sh
-poetry config virtualenvs.in-project true
-poetry install
+git clone https://github.com/DarbotLM/LavaLM.git
+cd LavaLM
+python3.10 -m venv .venv
 source .venv/bin/activate
-pytest
-
-## See FAQ for more info: https://github.com/lava-nc/lava/wiki/Frequently-Asked-Questions-(FAQ)#install
+python -m pip install -e .
+python examples/cpu_smoke.py
 ```
 
-### Windows
+The distribution is named `lavalm`; Python imports remain `lava.*` for compatibility. Do not install `lava-nc` and LavaLM into the same environment because they own the same import paths. No published PyPI package is asserted by these instructions.
 
-```powershell
-# Commands using PowerShell
-cd $HOME
-git clone git@github.com:lava-nc/lava.git
-cd lava
-git checkout v0.9.0
-python3 -m venv .venv
-.venv\Scripts\activate
-pip install -U pip
-curl -sSL https://install.python-poetry.org | python3 -
-poetry config virtualenvs.in-project true
-poetry install
-pytest
-```
-
-You should expect the following output after running the unit tests:
-
-```
-$ pytest
-============================================== test session starts ==============================================
-platform linux -- Python 3.8.10, pytest-7.0.1, pluggy-1.0.0
-rootdir: /home/user/lava, configfile: pyproject.toml, testpaths: tests
-plugins: cov-3.0.0
-collected 205 items
-
-tests/lava/magma/compiler/test_channel_builder.py .                                                       [  0%]
-tests/lava/magma/compiler/test_compiler.py ........................                                       [ 12%]
-tests/lava/magma/compiler/test_node.py ..                                                                 [ 13%]
-tests/lava/magma/compiler/builder/test_channel_builder.py .                                               [ 13%]
-
-...... pytest output ...
-
-tests/lava/proc/sdn/test_models.py ........                                                               [ 98%]
-tests/lava/proc/sdn/test_process.py ...                                                                   [100%]
-=============================================== warnings summary ================================================
-
-...... pytest output ...
-
-src/lava/proc/lif/process.py                                                           38      0   100%
-src/lava/proc/monitor/models.py                                                        27      0   100%
-src/lava/proc/monitor/process.py                                                       79      0   100%
-src/lava/proc/sdn/models.py                                                           159      9    94%   199-202, 225-231
-src/lava/proc/sdn/process.py                                                           59      0   100%
------------------------------------------------------------------------------------------------------------------TOTAL
-                                                                                     4048    453    89%
-
-Required test coverage of 85.0% reached. Total coverage: 88.81%
-============================ 199 passed, 6 skipped, 2 warnings in 118.17s (0:01:58) =============================
-
-```
-
-## Alternative: Installing Lava via Conda
-
-If you use the Conda package manager, you can simply install the Lava package
-via:
+## Work on the framework
 
 ```bash
-conda install lava -c conda-forge
+python -m pip install -r requirements/ci.txt -e .
+python -m pytest tests --ignore=tests/lava/tutorials --cov-report=term-missing --cov-fail-under=65
 ```
 
-Alternatively with intel numpy and scipy:
+The runtime needs worker processes and shared-memory manager sockets. See [testing](website/docs/testing.md) for the distinction between bounded regression tests and live runtime validation.
+
+## Run the Docusaurus wiki
+
+Use Node.js 22 or newer:
 
 ```bash
-conda create -n lava python=3.9 -c intel
-conda activate lava
-conda install -n lava -c intel numpy scipy
-conda install -n lava -c conda-forge lava --freeze-installed
+cd website
+npm ci
+npm start
+# Production build (validates links):
+npm run build
 ```
 
-## Alternative: Installing Lava from pypi
+The docs workflow uploads a preview artifact for each pull request and deploys from `main` once GitHub Pages uses the GitHub Actions source. The configured address is `https://darbotlm.github.io/LavaLM/`; configuration alone does not imply a live deployment. See [wiki maintenance](website/README.md).
 
-If you would like to install Lava as a user you can install via pypi binaries.
-Installing in this way does not give you access to run tests.
+## Lineage and licensing
 
-Open a Python terminal and run:
+This fork derives from [lava-nc/lava](https://github.com/lava-nc/lava), audited at commit `646fa535764c3b0bd1bf24b956aaf64561bf97f6`. Intel's upstream archive notice does not describe a support commitment for this independent fork. LavaLM is separate from the Lava Desktop/gateway product at lava.so.
 
-### Windows/MacOS/Linux
+Original notices and component licenses are retained: core, processes, and utilities use BSD-3-Clause; compiler and runtime use LGPL-2.1-or-later. Read [LICENSE](LICENSE) and the [migration guide](website/docs/migration.md). Changes to the compiler and runtime remain subject to their component licenses.
 
-```bash
-python -m venv .venv
-source .venv/bin/activate ## Or Windows: .venv\Scripts\activate
-pip install -U pip
-pip install lava-nc
-```
-
-## Alternative: Installing Lava from binaries
-
-You can also install Lava as a user with published Lava releases via
-[GitHub Releases](https://github.com/lava-nc/lava/releases). Please download
-the package and install it with the following commands. Installing in this way does not
-give you access to run tests.
-
-Open a Python terminal and run:
-
-### Windows/MacOS/Linux
-
-```bash
-python -m venv .venv
-source .venv/bin/activate ## Or Windows: .venv\Scripts\activate
-pip install -U pip
-# Substitute lava version needed for lava-nc-<version here>.tar.gz below
-pip install lava-nc-0.9.0.tar.gz
-```
-
-## Linting, testing, documentation and packaging
-
-```bash
-# Install poetry
-curl -sSL https://install.python-poetry.org | python3 -
-poetry config virtualenvs.in-project true
-poetry install
-poetry shell
-
-# Run linting
-flakeheaven lint src/lava tests
-
-# Run unit tests
-pytest
-
-# Create distribution
-poetry build
-#### Find builds at dist/
-
-# Run Secuity Linting
-bandit -r src/lava/.
-
-#### If security linting fails run bandit directly
-#### and format failures
-bandit -r src/lava/. --format custom --msg-template '{abspath}:{line}: {test_id}[bandit]: {severity}: {msg}'
-```
-##
->Refer to the tutorials directory for in-depth as well as end-to-end tutorials on how to write Lava Processes, connect them, and execute the code.
-
-# Stay in touch
-
-To receive regular updates on the latest developments and releases of the Lava
-Software Framework
-please [subscribe to our newsletter](http://eepurl.com/hJCyhb).
+Report bugs and proposals in [DarbotLM/LavaLM issues](https://github.com/DarbotLM/LavaLM/issues). The [roadmap](website/docs/roadmap.md) separates maintenance work from research milestones.

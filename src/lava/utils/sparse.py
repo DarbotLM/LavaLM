@@ -21,11 +21,11 @@ def find(mat: csr_matrix,
     if not explicit_zeros:
         return scipy_find(mat)
 
-    idx = mat.data == 0
-
-    mat.data[idx] = 1
-    dst, src, _ = scipy_find(mat)
-    mat.data[idx] = 0
+    # Preserve the caller's storage, including when scipy_find raises or the
+    # input data is read-only. Keep scipy's ordering/coalescing semantics.
+    nonzero_pattern = mat.copy()
+    nonzero_pattern.data[nonzero_pattern.data == 0] = 1
+    dst, src, _ = scipy_find(nonzero_pattern)
 
     vals = mat[dst, src].A1  # A1 returns values in flattened array
 

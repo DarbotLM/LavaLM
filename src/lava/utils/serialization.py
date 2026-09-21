@@ -5,6 +5,7 @@
 import pickle  # noqa: S403 # nosec
 import typing as ty
 import os
+from pathlib import Path
 
 from lava.magma.core.process.process import AbstractProcess
 from lava.magma.compiler.executable import Executable
@@ -60,6 +61,10 @@ def save(processes: ty.Union[AbstractProcess, ty.List[AbstractProcess]],
         raise TypeError(f"Argument <processes> must be AbstractProcess"
                         f" or list of AbstractProcess, but got"
                         f" {processes}.")
+    if isinstance(processes, list) and not all(
+            isinstance(process, AbstractProcess) for process in processes):
+        raise TypeError("Argument <processes> must contain only AbstractProcess "
+                        "instances.")
     if not isinstance(filename, str):
         raise TypeError(f"Argument <filename> must be string"
                         f" but got {filename}.")
@@ -71,7 +76,7 @@ def save(processes: ty.Union[AbstractProcess, ty.List[AbstractProcess]],
     obj = SerializationObject(processes, executable)
 
     # Add default file extension if no extension is present
-    if "." not in filename:
+    if not Path(filename).suffix:
         filename = filename + ".pickle"
 
     # Store object at <filename>
@@ -84,6 +89,9 @@ def load(filename: str) -> ty.Tuple[ty.Union[AbstractProcess,
                                     ty.Union[None, Executable]]:
     """Loads a process or list of processes with an (optional)
     corresponding executable from file <filename>.
+
+    Only load trusted files: pickle can execute arbitrary code. If an exact
+    extensionless path exists, it takes precedence over the '.pickle' fallback.
 
     Parameters
     ----------
@@ -113,6 +121,8 @@ def load(filename: str) -> ty.Tuple[ty.Union[AbstractProcess,
                         f" but got {filename}.")
 
     # Check if filename exists
+    if not os.path.isfile(filename) and not Path(filename).suffix:
+        filename += ".pickle"
     if not os.path.isfile(filename):
         raise OSError(f"File {filename} could not be found.")
 

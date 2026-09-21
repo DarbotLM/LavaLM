@@ -4,7 +4,7 @@ requires = ["poetry-core>=1.2.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
-name = "lava-nc"
+name = "lavalm"
 packages = [
     {include = "lava", from = "src"},
     {include = "tests"}
@@ -12,9 +12,10 @@ packages = [
 include = ["tutorials"]
 version = "0.11.0.dev0"
 readme = "README.md"
-description = "A Software Framework for Neuromorphic Computing"
-homepage = "https://lava-nc.org/"
-repository = "https://github.com/lava-nc/lava"
+description = "A neurosemantic computing research framework built on Lava"
+homepage = "https://github.com/DarbotLM/LavaLM"
+repository = "https://github.com/DarbotLM/LavaLM"
+maintainers = ["DarbotLM contributors"]
 authors = [ 
     "Intel's Neuromorphic Computing Lab and the open source community <lava@intel.com>"
 ]
@@ -32,18 +33,15 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Development Status :: 4 - Beta",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
     "License :: OSI Approved :: BSD License",
     "License :: OSI Approved :: GNU Lesser General Public License v2 or later (LGPLv2+)",
     "Operating System :: OS Independent"
 ]
 
 [tool.poetry.urls]
-"Issue and Bug Tracker" = "https://github.com/lava-nc/lava/issues"
-"Questions and Answers" = "https://github.com/lava-nc/lava/discussions/categories/q-a"
-"Frequently Asked Questions" = "https://github.com/lava-nc/lava/wiki/Frequently-Asked-Questions-(FAQ)"
-"Discussions" = "https://github.com/lava-nc/lava/discussions"
+"Issue and Bug Tracker" = "https://github.com/DarbotLM/LavaLM/issues"
+"Documentation Source" = "https://github.com/DarbotLM/LavaLM/tree/main/website/docs"
 
 [tool.poetry.dependencies]
 python = ">=3.10, <3.11"
@@ -88,7 +86,7 @@ nbconvert = ">=7.2.10,<7.18"
 [tool.black]
 line-length = 80
 target-version = [
-    "py38"
+    "py310"
 ]
 include = "\\.pyi?$"
 exclude = """
