@@ -1,0 +1,1604 @@
+[
+  {
+    "id": "F01",
+    "chunk": "01",
+    "title": "Establish the LavaLM distribution identity",
+    "priority": "P0",
+    "effort": "S",
+    "evidence_status": "Source confirmed",
+    "refs": [
+      [
+        "pyproject.toml",
+        "name = \"lava-nc\""
+      ],
+      [
+        "README.md",
+        "# THIS PROJECT IS ARCHIVED"
+      ],
+      [
+        "LICENSE",
+        "Lava repository"
+      ]
+    ],
+    "problem": "A renamed GitHub repository still builds a distribution named lava-nc and sends users to upstream support and installation targets. The archive banner describes Intel support, not a LavaLM maintenance policy. The repository has multiple license boundaries.",
+    "change": "Update project metadata, supported installation instructions, issue links and maintenance statement. Preserve upstream attribution and component licenses. Keep lava imports for the first compatible fork release; document that lava-nc and the fork must not be installed together if they own the same files. Confirm package-name ownership before publishing. Record version lineage and migration policy.",
+    "acceptance": [
+      "Build wheel and sdist; inspect METADATA, package paths and included license files.",
+      "Install each artifact in a clean environment outside the checkout and run a minimal CPU example.",
+      "README distinguishes current inherited functionality from planned neurosemantic and language-model work."
+    ],
+    "risk": "Do not globally replace lava imports or Intel notices. A namespace migration would break extension imports and existing pickles. Package registry ownership was not verified.",
+    "dependencies": "None",
+    "diagnostic": "",
+    "implementation_status": "Partial",
+    "sources": [
+      {
+        "path": "pyproject.toml",
+        "line": 7,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/pyproject.toml#L7"
+      },
+      {
+        "path": "README.md",
+        "line": 1,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/README.md#L1"
+      },
+      {
+        "path": "LICENSE",
+        "line": 1,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/LICENSE#L1"
+      }
+    ],
+    "filename": "F01-establish-the-lavalm-distribution-identity.md",
+    "implementation_note": "Distribution metadata and README now identify LavaLM, preserve lava imports and attribution, and define a fresh-environment migration. Package validation is added; registry ownership and publication remain open."
+  },
+  {
+    "id": "F02",
+    "chunk": "01",
+    "title": "Modernize dependencies in controlled stages",
+    "priority": "P1",
+    "effort": "M",
+    "evidence_status": "Source confirmed",
+    "refs": [
+      [
+        "pyproject.toml",
+        "python = \">=3.10, <3.11\""
+      ],
+      [
+        "pyproject.toml",
+        "networkx ="
+      ],
+      [
+        "pyproject.toml",
+        "poetry ="
+      ]
+    ],
+    "problem": "The interpreter constraint only permits Python 3.10 while classifiers list 3.8 and 3.9. Legacy dev tooling and a very broad lower bound for NetworkX obscure what is actually supported.",
+    "change": "First preserve a reproducible 3.10 baseline and align metadata. Declare runtime, test, documentation and optional backend dependencies separately. Pin the build tool in CI. Add newer interpreter/dependency combinations as explicit candidate jobs, then promote only passing combinations. Upgrade NumPy and NetworkX in separate changes after checking removed APIs and dtype behavior.",
+    "acceptance": [
+      "A fresh environment reproduces the documented dependency set without relying on globally installed packages.",
+      "Direct test imports such as psutil are declared in the test dependency group.",
+      "Each supported interpreter passes artifact installation, numerical tests and multiprocessing integration; unsupported versions fail installation clearly."
+    ],
+    "risk": "Do not widen the Python constraint or replace numerical dependencies solely because imports work. The audit used a compatible selected dependency set, not a full poetry.lock recreation.",
+    "dependencies": "F04 F12 F31",
+    "diagnostic": "",
+    "implementation_status": "Proposed",
+    "sources": [
+      {
+        "path": "pyproject.toml",
+        "line": 49,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/pyproject.toml#L49"
+      },
+      {
+        "path": "pyproject.toml",
+        "line": 53,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/pyproject.toml#L53"
+      },
+      {
+        "path": "pyproject.toml",
+        "line": 75,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/pyproject.toml#L75"
+      }
+    ],
+    "filename": "F02-modernize-dependencies-in-controlled-stages.md",
+    "implementation_note": "No implementation change in this maintenance batch."
+  },
+  {
+    "id": "F03",
+    "chunk": "02",
+    "title": "Repair release artifact and publishing workflows",
+    "priority": "P0",
+    "effort": "M",
+    "evidence_status": "Source confirmed",
+    "refs": [
+      [
+        ".github/workflows/cd.yml",
+        "uses: actions/upload-artifact@v3"
+      ],
+      [
+        ".github/workflows/cd.yml",
+        "pip install \"nbconvert"
+      ],
+      [
+        ".github/workflows/cd.yml",
+        "prerelease: steps"
+      ],
+      [
+        ".github/CODEOWNERS",
+        "@lava-nc"
+      ]
+    ],
+    "problem": "CD combines upload-artifact v3 with download-artifact v4, includes unquoted pip version expressions containing shell redirection characters, supplies a literal prerelease expression, and gates publishing on upstream usernames and lava-nc metadata.",
+    "change": "Use a compatible supported pair of artifact actions pinned to reviewed commits, unique artifact names and checksums. Quote every requirement or install a requirements file. Use a real expression for the prerelease input. Replace actor-name checks with the LavaLM release environment and owned publishing configuration. Build once, test those exact bytes, then publish those bytes. Update CODEOWNERS and project automation to actual maintainers.",
+    "acceptance": [
+      "A dispatch builds and downloads the same wheel and sdist; checksum comparisons succeed.",
+      "A prerelease creates a correctly marked draft and does not run stable publishing.",
+      "A dry run from an authorized maintainer reaches the owned release environment with the intended package name and minimal permissions."
+    ],
+    "risk": "Publishing credentials and repository environment settings were not inspected. This is a release blocker, not evidence that an unauthorized release occurred.",
+    "dependencies": "F01",
+    "diagnostic": "",
+    "implementation_status": "Partial",
+    "sources": [
+      {
+        "path": ".github/workflows/cd.yml",
+        "line": 26,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/.github/workflows/cd.yml#L26"
+      },
+      {
+        "path": ".github/workflows/cd.yml",
+        "line": 102,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/.github/workflows/cd.yml#L102"
+      },
+      {
+        "path": ".github/workflows/cd.yml",
+        "line": 180,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/.github/workflows/cd.yml#L180"
+      },
+      {
+        "path": ".github/CODEOWNERS",
+        "line": 1,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/.github/CODEOWNERS#L1"
+      }
+    ],
+    "filename": "F03-repair-release-artifact-and-publishing-workflows.md",
+    "implementation_note": "Replaced inherited publishing with owned wheel/sdist build and install checks, using compatible artifact actions. Publication and release governance are deferred; no registry upload is configured."
+  },
+  {
+    "id": "F04",
+    "chunk": "02",
+    "title": "Make CI self contained and define test lanes",
+    "priority": "P1",
+    "effort": "M",
+    "evidence_status": "Source confirmed",
+    "refs": [
+      [
+        ".github/workflows/ci.yml",
+        "lava-nc/ci-setup-composite-action"
+      ],
+      [
+        "pyproject.toml",
+        "fail_under = 65"
+      ],
+      [
+        "tests/lava/magma/runtime/test_leakage.py",
+        "import psutil"
+      ]
+    ],
+    "problem": "Setup is delegated to an upstream action and the suite mixes different execution requirements. A runtime startup failure creates a large cascade of failures and cleanup errors, making the result hard to interpret.",
+    "change": "Use explicit interpreter and dependency setup owned by this repository. Create pure-unit, CPU-runtime, notebook and optional-hardware lanes. Add a startup preflight for multiprocessing/shared memory with a clear diagnostic, finite job timeouts and retained failure logs. Make test and coverage commands explicit; preserve the existing coverage threshold until a measured baseline supports changing it.",
+    "acceptance": [
+      "A clean clone can run each lane using the same documented command locally and in CI.",
+      "A machine without the required IPC capability gets a clear integration preflight result; required CI does not silently skip it.",
+      "Coverage is attributable to the tested commit; required test failures fail the job."
+    ],
+    "risk": "Do not label all existing tests slow or optional to obtain a green build. macOS and Windows support require actual runner evidence. Bootstrap this lane on the current 3.10 baseline before F02 modernization.",
+    "dependencies": "None",
+    "diagnostic": "",
+    "implementation_status": "Partial",
+    "sources": [
+      {
+        "path": ".github/workflows/ci.yml",
+        "line": 24,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/.github/workflows/ci.yml#L24"
+      },
+      {
+        "path": "pyproject.toml",
+        "line": 134,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/pyproject.toml#L134"
+      },
+      {
+        "path": "tests/lava/magma/runtime/test_leakage.py",
+        "line": 9,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/tests/lava/magma/runtime/test_leakage.py#L9"
+      }
+    ],
+    "filename": "F04-make-ci-self-contained-and-define-test-lanes.md",
+    "implementation_note": "Added owned Linux/macOS CPU jobs, explicit principal dependency pins, smoke execution and the 65% coverage gate. Owned critical Ruff checks and Bandit are included; notebook, broader lint/type baselines, and broader platform lanes remain open."
+  },
+  {
+    "id": "F05",
+    "chunk": "03",
+    "title": "Stop adding root log handlers per process",
+    "priority": "P1",
+    "effort": "S",
+    "evidence_status": "Reproduced",
+    "refs": [
+      [
+        "src/lava/magma/core/process/process.py",
+        "self.log = logging.getLogger()"
+      ],
+      [
+        "src/lava/magma/compiler/compiler.py",
+        "addHandler"
+      ]
+    ],
+    "problem": "Constructing three AbstractProcess objects added three handlers to the host root logger. Graph size can amplify duplicate output and retained handler state, while library initialization changes application logging.",
+    "change": "Use a library logger hierarchy with a NullHandler default. Make console/file configuration explicit at the application or session boundary. Preserve per-process context as structured fields or LoggerAdapter data rather than per-instance handlers. Apply the same policy to Compiler.",
+    "acceptance": [
+      "Creating and deleting 100 processes leaves the host root handler count unchanged.",
+      "A configured warning produces one record containing process ID and name.",
+      "Two independent graph sessions can use different logging context without duplicate records."
+    ],
+    "risk": "Users relying on automatic console setup need a documented configure_logging helper or a deprecation path.",
+    "dependencies": "None",
+    "diagnostic": "C02",
+    "implementation_status": "Proposed",
+    "sources": [
+      {
+        "path": "src/lava/magma/core/process/process.py",
+        "line": 175,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/core/process/process.py#L175"
+      },
+      {
+        "path": "src/lava/magma/compiler/compiler.py",
+        "line": 107,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/compiler/compiler.py#L107"
+      }
+    ],
+    "filename": "F05-stop-adding-root-log-handlers-per-process.md",
+    "implementation_note": "No implementation change in this maintenance batch."
+  },
+  {
+    "id": "F06",
+    "chunk": "03",
+    "title": "Validate public run and shape contracts early",
+    "priority": "P1",
+    "effort": "S",
+    "evidence_status": "Reproduced and source confirmed",
+    "refs": [
+      [
+        "src/lava/magma/core/run_conditions.py",
+        "def __init__(self, num_steps"
+      ],
+      [
+        "src/lava/magma/core/process/interfaces.py",
+        "class AbstractProcessMember"
+      ]
+    ],
+    "problem": "RunSteps accepts negative counts, fractional counts and booleans. Shape checks in base process members are much weaker than those in IO validators. Invalid inputs can travel into actor loops or allocations.",
+    "change": "Centralize integer, shape and finite-value validation for public constructors. Reject bool where an integer count is intended; deliberately support NumPy integer scalars. Define zero-step execution as a documented no-op or reject it consistently after compatibility review. Validate before allocating resources or transmitting commands.",
+    "acceptance": [
+      "Negative, fractional, boolean and excessively large step counts have documented deterministic outcomes.",
+      "Shape tests cover scalar shape policy, empty dimensions, negative dimensions and NumPy integers.",
+      "Existing valid examples keep their output and execution timing."
+    ],
+    "risk": "Empty shapes and zero-sized arrays may be meaningful in current internals. Inventory their use before imposing a universal positive-dimension rule.",
+    "dependencies": "None",
+    "diagnostic": "C01",
+    "implementation_status": "Proposed",
+    "sources": [
+      {
+        "path": "src/lava/magma/core/run_conditions.py",
+        "line": 36,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/core/run_conditions.py#L36"
+      },
+      {
+        "path": "src/lava/magma/core/process/interfaces.py",
+        "line": 14,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/core/process/interfaces.py#L14"
+      }
+    ],
+    "filename": "F06-validate-public-run-and-shape-contracts-early.md",
+    "implementation_note": "No implementation change in this maintenance batch."
+  },
+  {
+    "id": "F07",
+    "chunk": "03",
+    "title": "Make iteration and graph ownership explicit",
+    "priority": "P1",
+    "effort": "M",
+    "evidence_status": "Reproduced and source confirmed",
+    "refs": [
+      [
+        "src/lava/magma/core/process/process.py",
+        "def __iter__(self)"
+      ],
+      [
+        "src/lava/magma/core/process/process.py",
+        "self.processes.append(process)"
+      ],
+      [
+        "src/lava/magma/core/process/variable.py",
+        "self.vars.append(var)"
+      ]
+    ],
+    "problem": "Collection is its own iterator, so a fresh iteration after partial consumption resumes partway through. ProcessServer and VarServer retain strong references until a global reset; this is unsuitable as an implicit lifetime policy for repeated agent workloads.",
+    "change": "First return an independent iterator over a defined snapshot of collection members. Separately introduce explicit graph/session ownership with stable IDs and disposal. Audit callers before replacing global registries with weak references; compiled graphs must retain required objects. Avoid resetting shared registries while another graph is alive.",
+    "acceptance": [
+      "Repeated, nested and partially consumed iterations behave independently and terminate.",
+      "A repeated create-run-dispose workload reaches a stable retained-object count.",
+      "Disposing one session does not invalidate IDs or state in another session."
+    ],
+    "risk": "Iterator semantics are a small correction; registry ownership is a separate compatibility change. Do not combine them into one large patch.",
+    "dependencies": "F13",
+    "diagnostic": "C03",
+    "implementation_status": "Partial",
+    "sources": [
+      {
+        "path": "src/lava/magma/core/process/process.py",
+        "line": 639,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/core/process/process.py#L639"
+      },
+      {
+        "path": "src/lava/magma/core/process/process.py",
+        "line": 560,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/core/process/process.py#L560"
+      },
+      {
+        "path": "src/lava/magma/core/process/variable.py",
+        "line": 224,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/core/process/variable.py#L224"
+      }
+    ],
+    "filename": "F07-make-iteration-and-graph-ownership-explicit.md",
+    "implementation_note": "Iteration now creates an independent membership snapshot. Direct next(collection) remains for compatibility. Registry lifetime/weak-reference work is deferred."
+  },
+  {
+    "id": "F08",
+    "chunk": "04",
+    "title": "Correct output port configuration lookup",
+    "priority": "P1",
+    "effort": "S",
+    "evidence_status": "Reproduced with isolated compiler inputs",
+    "refs": [
+      [
+        "src/lava/magma/compiler/subcompilers/py/pyproc_compiler.py",
+        "for k, port in enumerate"
+      ],
+      [
+        "tests/lava/magma/runtime/test_connection_config.py",
+        "class TestConnectionConfig"
+      ]
+    ],
+    "problem": "The compiler uses the output port ordinal to index that port\u2019s own connection configuration values. Two output ports with one configured connection each raise IndexError on the second port.",
+    "change": "Resolve configuration by the relevant port-to-peer relationship. If the initializer can carry only one config, accept one config or identical configs and explicitly reject conflicting fan-out configs until per-edge support is defined. Do not simply replace every index with zero and discard distinct configurations.",
+    "acceptance": [
+      "Two and three output ports with one config each compile successfully.",
+      "Reordering ports or connections cannot change which config is selected.",
+      "Fan-out with differing configs is either faithfully represented or rejected with a precise error."
+    ],
+    "risk": "Connection configuration also affects optional hardware routing. CPU regression tests do not establish hardware correctness.",
+    "dependencies": "None",
+    "diagnostic": "K02",
+    "implementation_status": "Proposed",
+    "sources": [
+      {
+        "path": "src/lava/magma/compiler/subcompilers/py/pyproc_compiler.py",
+        "line": 218,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/compiler/subcompilers/py/pyproc_compiler.py#L218"
+      },
+      {
+        "path": "tests/lava/magma/runtime/test_connection_config.py",
+        "line": 62,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/tests/lava/magma/runtime/test_connection_config.py#L62"
+      }
+    ],
+    "filename": "F08-correct-output-port-configuration-lookup.md",
+    "implementation_note": "No implementation change in this maintenance batch."
+  },
+  {
+    "id": "F09",
+    "chunk": "04",
+    "title": "Bound graph traversal and compiler convergence",
+    "priority": "P1",
+    "effort": "M",
+    "evidence_status": "Helper reproduced and source confirmed",
+    "refs": [
+      [
+        "src/lava/magma/compiler/compiler_graphs.py",
+        "def flatten_list_recursive"
+      ],
+      [
+        "src/lava/magma/compiler/compiler_graphs.py",
+        "def find_processes"
+      ],
+      [
+        "src/lava/magma/compiler/compiler.py",
+        "while channel_map != channel_map_prev"
+      ]
+    ],
+    "problem": "The recursive flatten helper raises RecursionError for 2000 siblings. Connected-process discovery also uses recursion and set-based ordering; subcompiler convergence has no iteration limit.",
+    "change": "Replace deep recursive traversals with explicit stacks and identity-based visited sets while preserving a documented stable ordering. Avoid repeatedly concatenating accumulated lists. Add a configurable convergence limit with a diagnostic showing the changing subcompiler and channel entries. Retain cycle and hierarchical graph semantics.",
+    "acceptance": [
+      "Flat and deeply nested inputs above the Python recursion limit produce the expected flattened order.",
+      "Chain, star, recurrent and hierarchical process graphs compile deterministically across repeated runs.",
+      "An intentionally oscillating test subcompiler fails within the configured limit and reports useful context."
+    ],
+    "risk": "The audit reproduced the helper failure, not an end-to-end large-network compilation failure. Baseline compile-time and memory benchmarks are required before claiming speedups.",
+    "dependencies": "None",
+    "diagnostic": "K01",
+    "implementation_status": "Partial",
+    "sources": [
+      {
+        "path": "src/lava/magma/compiler/compiler_graphs.py",
+        "line": 76,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/compiler/compiler_graphs.py#L76"
+      },
+      {
+        "path": "src/lava/magma/compiler/compiler_graphs.py",
+        "line": 106,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/compiler/compiler_graphs.py#L106"
+      },
+      {
+        "path": "src/lava/magma/compiler/compiler.py",
+        "line": 436,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/compiler/compiler.py#L436"
+      }
+    ],
+    "filename": "F09-bound-graph-traversal-and-compiler-convergence.md",
+    "implementation_note": "Nested-list flattening uses an iterative stack and is tested at width and depth 3,000. Traversal ordering, other recursive graph operations and compilation convergence remain open."
+  },
+  {
+    "id": "F10",
+    "chunk": "04",
+    "title": "Version and validate compiler caches",
+    "priority": "P1",
+    "effort": "M",
+    "evidence_status": "Source confirmed",
+    "refs": [
+      [
+        "src/lava/magma/compiler/compiler.py",
+        "cache_object = pickle.load"
+      ],
+      [
+        "src/lava/magma/compiler/compiler.py",
+        "pb.proc_params = None"
+      ]
+    ],
+    "problem": "The cache is loaded by directory existence and process names without an explicit graph/configuration/version fingerprint. Writing temporarily clears builder parameters and restores them only after successful serialization.",
+    "change": "Create a versioned cache manifest containing a canonical graph signature, model identifiers, port shapes and dtypes, compilation options, backend versions and a declared policy for initial state and weights. Treat incompatible caches as misses. Write atomically. Avoid mutating live builders during serialization or restore them in finally. Keep the legacy pickle cache explicitly trusted-local only; a checksum does not make pickle safe.",
+    "acceptance": [
+      "Changed topology, dtype, shape, model, relevant parameter or compiler version invalidates the cache.",
+      "Fault injection during serialization leaves live builders and the previous cache intact.",
+      "Cache hit and miss produce equivalent outputs; corrupt manifests cause a useful miss or error."
+    ],
+    "risk": "A full portable compiler IR is a larger project. Start with cache validation and atomicity without promising cross-version pickle compatibility.",
+    "dependencies": "F09",
+    "diagnostic": "",
+    "implementation_status": "Proposed",
+    "sources": [
+      {
+        "path": "src/lava/magma/compiler/compiler.py",
+        "line": 236,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/compiler/compiler.py#L236"
+      },
+      {
+        "path": "src/lava/magma/compiler/compiler.py",
+        "line": 297,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/compiler/compiler.py#L297"
+      }
+    ],
+    "filename": "F10-version-and-validate-compiler-caches.md",
+    "implementation_note": "No implementation change in this maintenance batch."
+  },
+  {
+    "id": "F11",
+    "chunk": "04",
+    "title": "Expose backend capabilities and discovery failures",
+    "priority": "P2",
+    "effort": "L",
+    "evidence_status": "Source confirmed design improvement",
+    "refs": [
+      [
+        "src/lava/magma/compiler/compiler_graphs.py",
+        "except ImportError:"
+      ],
+      [
+        "src/lava/magma/compiler/compiler_graphs.py",
+        "exec_module"
+      ],
+      [
+        "src/lava/magma/core/run_configs.py",
+        "class RunConfig"
+      ]
+    ],
+    "problem": "Optional imports use broad ImportError fallbacks and dummy classes in several modules. Model discovery imports neighboring modules and can suppress exceptions, making an absent backend hard to distinguish from a broken installed backend.",
+    "change": "Introduce a backend capability descriptor and explicit registration path while retaining legacy discovery as a compatibility adapter. Report missing optional packages separately from initialization errors. Include backend name, version, supported dtypes, synchronization protocol and process-model tags in selection diagnostics.",
+    "acceptance": [
+      "CPU-only installation works without hardware extensions.",
+      "A missing backend gives an actionable capability error; a broken installed backend preserves the original exception.",
+      "A third-party test backend registers without edits to compiler internals, and legacy models still resolve."
+    ],
+    "risk": "Do not execute arbitrary discovered plugins by default in an agent service. Plugin trust and installation remain host responsibilities.",
+    "dependencies": "F01 F04",
+    "diagnostic": "",
+    "implementation_status": "Proposed",
+    "sources": [
+      {
+        "path": "src/lava/magma/compiler/compiler_graphs.py",
+        "line": 28,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/compiler/compiler_graphs.py#L28"
+      },
+      {
+        "path": "src/lava/magma/compiler/compiler_graphs.py",
+        "line": 880,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/compiler/compiler_graphs.py#L880"
+      },
+      {
+        "path": "src/lava/magma/core/run_configs.py",
+        "line": 34,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/core/run_configs.py#L34"
+      }
+    ],
+    "filename": "F11-expose-backend-capabilities-and-discovery-failures.md",
+    "implementation_note": "No implementation change in this maintenance batch."
+  },
+  {
+    "id": "F12",
+    "chunk": "05",
+    "title": "Use an explicit multiprocessing context",
+    "priority": "P1",
+    "effort": "L",
+    "evidence_status": "Reproduced",
+    "refs": [
+      [
+        "src/lava/magma/runtime/message_infrastructure/multiprocessing.py",
+        "mp.set_start_method('fork')"
+      ],
+      [
+        "src/lava/magma/core/model/py/model.py",
+        "PyLoihiModelToPyAsyncModel"
+      ]
+    ],
+    "problem": "Importing Runtime after the host selects spawn raises RuntimeError because a module import sets the global start method to fork. Dynamic async-model construction also has explicit Windows limitations, so removing one line alone does not establish spawn support.",
+    "change": "Pass a multiprocessing context through infrastructure construction and use it consistently for processes, pipes, queues, locks, semaphores, managers and watchdogs. Preserve an explicitly documented legacy fork option while adding spawn-compatible serializable builders and top-level actor entry points. The library must not change the application\u2019s global context during import.",
+    "acceptance": [
+      "Import succeeds after a host selects spawn or forkserver and leaves that selection unchanged.",
+      "A minimal connected graph runs and stops under each advertised context.",
+      "No synchronization primitive created in one context is passed to actors from another; unsupported dynamic-model combinations fail before launch."
+    ],
+    "risk": "This is an integration change, not low-hanging one-line work. Validate on real Linux, macOS and Windows runners before advertising portability.",
+    "dependencies": "F04 F13",
+    "diagnostic": "R01",
+    "implementation_status": "Proposed",
+    "sources": [
+      {
+        "path": "src/lava/magma/runtime/message_infrastructure/multiprocessing.py",
+        "line": 47,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/runtime/message_infrastructure/multiprocessing.py#L47"
+      },
+      {
+        "path": "src/lava/magma/core/model/py/model.py",
+        "line": 687,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/core/model/py/model.py#L687"
+      }
+    ],
+    "filename": "F12-use-an-explicit-multiprocessing-context.md",
+    "implementation_note": "No implementation change in this maintenance batch."
+  },
+  {
+    "id": "F13",
+    "chunk": "05",
+    "title": "Make runtime startup and cleanup transactional",
+    "priority": "P1",
+    "effort": "L",
+    "evidence_status": "Reproduced cleanup defect and source confirmed lifecycle risks",
+    "refs": [
+      [
+        "src/lava/magma/runtime/runtime.py",
+        "def initialize("
+      ],
+      [
+        "src/lava/magma/runtime/runtime.py",
+        "def stop(self)"
+      ],
+      [
+        "src/lava/magma/runtime/message_infrastructure/shared_memory_manager.py",
+        "def shutdown"
+      ],
+      [
+        "src/lava/magma/runtime/message_infrastructure/multiprocessing.py",
+        "def join("
+      ]
+    ],
+    "problem": "Cleanup before SharedMemoryManager starts raises AttributeError. The broad test run showed this masking startup failures. Runtime initialization allocates several resources without an explicit unwind stack; receives and actor joins can wait indefinitely.",
+    "change": "Define CREATED, INITIALIZING, READY, RUNNING, PAUSED, STOPPING, STOPPED and FAILED states. Register cleanup immediately after each acquisition, unwind in reverse order and preserve the primary exception. Make stop and close idempotent. Add startup and shutdown deadlines with graceful stop first and bounded termination of owned actors only. Destructors must be best-effort and nonblocking.",
+    "acceptance": [
+      "Inject failure after each startup stage and verify owned actors, ports, shared-memory handles and watchdogs are released.",
+      "Stop before start, stop after failed start, repeated stop and exception exit all succeed without masking the original error.",
+      "An unresponsive child reaches a deterministic timeout result; healthy children still shut down gracefully."
+    ],
+    "risk": "Blindly terminating actors can corrupt in-flight state. Distinguish cancellation from successful completion and retain error context.",
+    "dependencies": "F16",
+    "diagnostic": "R05",
+    "implementation_status": "Proposed",
+    "sources": [
+      {
+        "path": "src/lava/magma/runtime/runtime.py",
+        "line": 158,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/runtime/runtime.py#L158"
+      },
+      {
+        "path": "src/lava/magma/runtime/runtime.py",
+        "line": 485,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/runtime/runtime.py#L485"
+      },
+      {
+        "path": "src/lava/magma/runtime/message_infrastructure/shared_memory_manager.py",
+        "line": 20,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/runtime/message_infrastructure/shared_memory_manager.py#L20"
+      },
+      {
+        "path": "src/lava/magma/runtime/message_infrastructure/multiprocessing.py",
+        "line": 74,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/runtime/message_infrastructure/multiprocessing.py#L74"
+      }
+    ],
+    "filename": "F13-make-runtime-startup-and-cleanup-transactional.md",
+    "implementation_note": "No implementation change in this maintenance batch."
+  },
+  {
+    "id": "F14",
+    "chunk": "05",
+    "title": "Validate variable transactions and preserve data types",
+    "priority": "P1",
+    "effort": "M then L",
+    "evidence_status": "Reproduced indexing defect and source confirmed transport limitation",
+    "refs": [
+      [
+        "src/lava/magma/runtime/runtime.py",
+        "def set_var("
+      ],
+      [
+        "src/lava/magma/runtime/runtime.py",
+        "def get_var("
+      ]
+    ],
+    "problem": "Array indexing raises an ambiguous-truth-value error after three SET header messages have already been sent; get(idx=0) returns the whole buffer. Management values are transported through float64, limiting exact representation of large integers and preventing a general typed state API.",
+    "change": "First replace truth-value checks with explicit None handling and validate index, value, shape and element count before sending any header. Specify whether set indices refer to source selection or destination selection and implement that contract at both ends. Then introduce a versioned typed payload or reject unsupported values before transfer. Keep legacy hardware transport behind a capability adapter.",
+    "acceptance": [
+      "None, zero, slices, tuples, boolean masks and integer-array indices follow the documented contract.",
+      "An invalid local request sends zero protocol messages and the next valid transaction succeeds.",
+      "Every advertised dtype round-trips exactly where required, including int64 values above 2**53; unsupported values fail clearly."
+    ],
+    "risk": "Fixing if idx alone cannot implement remote partial writes or change the wire format safely. Coordinate Runtime, RuntimeService and ProcessModel handlers.",
+    "dependencies": "F13 F16",
+    "diagnostic": "R03 R04",
+    "implementation_status": "Proposed",
+    "sources": [
+      {
+        "path": "src/lava/magma/runtime/runtime.py",
+        "line": 516,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/runtime/runtime.py#L516"
+      },
+      {
+        "path": "src/lava/magma/runtime/runtime.py",
+        "line": 573,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/runtime/runtime.py#L573"
+      }
+    ],
+    "filename": "F14-validate-variable-transactions-and-preserve-data-types.md",
+    "implementation_note": "No implementation change in this maintenance batch."
+  },
+  {
+    "id": "F15",
+    "chunk": "03",
+    "title": "Return the context manager object",
+    "priority": "P2",
+    "effort": "S",
+    "evidence_status": "Reproduced for Runtime and source confirmed for Process",
+    "refs": [
+      [
+        "src/lava/magma/runtime/runtime.py",
+        "def __enter__(self)"
+      ],
+      [
+        "src/lava/magma/core/process/process.py",
+        "def __enter__(self)"
+      ]
+    ],
+    "problem": "Runtime.__enter__ initializes but returns None; AbstractProcess.__enter__ also returns None. Existing context tests exercise cleanup without checking the as binding.",
+    "change": "Return self from both context manager entry methods after their existing entry behavior. Retain exception propagation and existing stop semantics. Handle startup failure through the lifecycle work rather than swallowing exceptions here.",
+    "acceptance": [
+      "with process as p binds the original process.",
+      "with runtime as r binds the initialized runtime.",
+      "A body exception is propagated and cleanup is invoked once logically, with repeated cleanup safe."
+    ],
+    "risk": "Small independent API repair; do not make it depend on a wholesale runtime rewrite.",
+    "dependencies": "None",
+    "diagnostic": "R02",
+    "implementation_status": "Implemented; CPU CI verified",
+    "sources": [
+      {
+        "path": "src/lava/magma/runtime/runtime.py",
+        "line": 149,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/runtime/runtime.py#L149"
+      },
+      {
+        "path": "src/lava/magma/core/process/process.py",
+        "line": 227,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/core/process/process.py#L227"
+      }
+    ],
+    "filename": "F15-return-the-context-manager-object.md",
+    "implementation_note": "Process and Runtime context managers return self. Bounded tests verify binding, cleanup calls, and propagation of body exceptions. Hosted Linux/macOS CPU suites now pass; transactional startup/shutdown remains separate F13 work."
+  },
+  {
+    "id": "F16",
+    "chunk": "06",
+    "title": "Define channel cancellation and thread ownership",
+    "priority": "P1",
+    "effort": "M",
+    "evidence_status": "Source confirmed",
+    "refs": [
+      [
+        "src/lava/magma/compiler/channels/pypychannel.py",
+        "class CspRecvQueue"
+      ],
+      [
+        "src/lava/magma/compiler/channels/pypychannel.py",
+        "def join(self)"
+      ],
+      [
+        "src/lava/magma/compiler/channels/pypychannel.py",
+        "def recv(self)"
+      ]
+    ],
+    "problem": "Port join methods signal callback threads but do not join them. The queue timeout implementation uses wall-clock time. Send/receive blocking has no consistent cancellation contract for runtime shutdown.",
+    "change": "Use monotonic deadlines, explicit OPEN/CLOSING/CLOSED state and bounded callback-thread joins. Wake blocked producers and consumers with a defined cancellation outcome. Preserve slot ownership until all array views and callbacks are released. Validate data before taking a slot and make failed copy operations restore slot accounting.",
+    "acceptance": [
+      "Full-buffer sender and empty-buffer receiver both unblock on close.",
+      "Repeated close leaves no live owned callback threads or shared-memory views.",
+      "FIFO ordering, peek semantics and exact payloads remain correct through wraparound; clock adjustments cannot extend a timeout."
+    ],
+    "risk": "Do not introduce zero-copy receive aliases without a separate ownership contract; the existing receive copy protects slot reuse.",
+    "dependencies": "F04",
+    "diagnostic": "",
+    "implementation_status": "Proposed",
+    "sources": [
+      {
+        "path": "src/lava/magma/compiler/channels/pypychannel.py",
+        "line": 156,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/compiler/channels/pypychannel.py#L156"
+      },
+      {
+        "path": "src/lava/magma/compiler/channels/pypychannel.py",
+        "line": 146,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/compiler/channels/pypychannel.py#L146"
+      },
+      {
+        "path": "src/lava/magma/compiler/channels/pypychannel.py",
+        "line": 293,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/compiler/channels/pypychannel.py#L293"
+      }
+    ],
+    "filename": "F16-define-channel-cancellation-and-thread-ownership.md",
+    "implementation_note": "No implementation change in this maintenance batch."
+  },
+  {
+    "id": "F17",
+    "chunk": "06",
+    "title": "Bound watchdog resource usage",
+    "priority": "P2",
+    "effort": "M",
+    "evidence_status": "Source confirmed",
+    "refs": [
+      [
+        "src/lava/magma/compiler/channels/watchdog.py",
+        "threads: ty.List[Thread] = []"
+      ],
+      [
+        "src/lava/magma/compiler/channels/watchdog.py",
+        "t.join()"
+      ]
+    ],
+    "problem": "The optional event monitor creates a thread for every event and retains each thread object until stop. Monitor shutdown joins all threads, including those waiting on events that may never complete.",
+    "change": "Track active operations in a bounded registry and poll deadlines from a small fixed worker set, or at minimum prune completed threads and add cancellation. Attach operation IDs so reuse of a shared event cannot confuse old and new operations. Emit structured warnings through the library logger with rate limiting.",
+    "acceptance": [
+      "A sustained completed-event workload has stable memory and thread counts.",
+      "Stop finishes within its deadline when an event never completes.",
+      "Each warning identifies the correct operation and diagnostics remain off by default without runtime overhead beyond the documented budget."
+    ],
+    "risk": "Measure overhead with watchdog enabled and disabled. Diagnostic facilities must not create a second deadlock path.",
+    "dependencies": "F05 F16",
+    "diagnostic": "",
+    "implementation_status": "Proposed",
+    "sources": [
+      {
+        "path": "src/lava/magma/compiler/channels/watchdog.py",
+        "line": 31,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/compiler/channels/watchdog.py#L31"
+      },
+      {
+        "path": "src/lava/magma/compiler/channels/watchdog.py",
+        "line": 43,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/compiler/channels/watchdog.py#L43"
+      }
+    ],
+    "filename": "F17-bound-watchdog-resource-usage.md",
+    "implementation_note": "No implementation change in this maintenance batch."
+  },
+  {
+    "id": "F18",
+    "chunk": "07",
+    "title": "Validate learning parameters and make seeds reproducible",
+    "priority": "P1",
+    "effort": "M",
+    "evidence_status": "Reproduced validation gap and source confirmed RNG behavior",
+    "refs": [
+      [
+        "src/lava/magma/core/learning/learning_rule.py",
+        "def _validate_t_epoch"
+      ],
+      [
+        "src/lava/magma/core/learning/learning_rule.py",
+        "np.random.randint"
+      ],
+      [
+        "src/lava/magma/core/learning/random.py",
+        "class TraceRandom"
+      ]
+    ],
+    "problem": "A fractional learning epoch and NaN trace time constant are accepted. TraceRandom and ConnVarRandom already use local generators; the default learning-rule seed is drawn from NumPy\u2019s global RNG.",
+    "change": "Require a positive integral epoch and finite nonnegative impulse/tau values, preserving the defined zero-tau behavior. Add an optional session seed policy that derives stable independent per-model streams and records generator state for resumption. Keep explicitly supplied historical seeds reproducible and document any new seed mode separately.",
+    "acceptance": [
+      "NaN, infinity, fractional epochs, bool epochs and invalid seeds fail at construction with parameter-specific messages.",
+      "Identical explicit seeds reproduce existing golden learning traces.",
+      "Parallel runs with a recorded session seed reproduce results across repeated executions within the declared backend/version contract."
+    ],
+    "risk": "Replacing RNG algorithms or draw order changes scientific outputs. Treat that as a versioned behavior change, not cleanup.",
+    "dependencies": "F06 F31",
+    "diagnostic": "L01",
+    "implementation_status": "Proposed",
+    "sources": [
+      {
+        "path": "src/lava/magma/core/learning/learning_rule.py",
+        "line": 565,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/core/learning/learning_rule.py#L565"
+      },
+      {
+        "path": "src/lava/magma/core/learning/learning_rule.py",
+        "line": 126,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/core/learning/learning_rule.py#L126"
+      },
+      {
+        "path": "src/lava/magma/core/learning/random.py",
+        "line": 19,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/core/learning/random.py#L19"
+      }
+    ],
+    "filename": "F18-validate-learning-parameters-and-make-seeds-reproducible.md",
+    "implementation_note": "No implementation change in this maintenance batch."
+  },
+  {
+    "id": "F19",
+    "chunk": "07",
+    "title": "Specify learning expression and numeric conformance",
+    "priority": "P2",
+    "effort": "M",
+    "evidence_status": "Source confirmed design improvement",
+    "refs": [
+      [
+        "src/lava/magma/core/learning/learning_rule_applier.py",
+        "self.eval_func.symtable = applier_args"
+      ],
+      [
+        "src/lava/magma/core/learning/symbolic_equation.py",
+        "def _parse("
+      ],
+      [
+        "src/lava/magma/core/learning/product_series.py",
+        "class ProductSeries"
+      ]
+    ],
+    "problem": "The symbolic parser and the float/bit-approximate appliers form a custom numerical language. Future semantic-learning extensions need stable grammar, diagnostics and overflow rules rather than unconstrained expression expansion.",
+    "change": "Document the accepted grammar and numeric rules, cap expression size and nesting for external inputs, and preserve structured parse/evaluation errors. Evaluate the parsed representation with a restricted symbol set. Add differential tests against a simple reference evaluator and boundary vectors for fixed-point shifts, clipping and rounding.",
+    "acceptance": [
+      "Valid existing rules retain results and invalid syntax gives a location-aware error.",
+      "Long or deeply nested malformed rules fail within a finite resource budget.",
+      "Reference comparisons cover signed values, extremes, zero traces, all dependencies and seeded rounding."
+    ],
+    "risk": "The use of asteval alone is not proof of an exploitable path. No exploit was attempted or established; this is a language-contract and reliability improvement.",
+    "dependencies": "F18",
+    "diagnostic": "",
+    "implementation_status": "Proposed",
+    "sources": [
+      {
+        "path": "src/lava/magma/core/learning/learning_rule_applier.py",
+        "line": 167,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/core/learning/learning_rule_applier.py#L167"
+      },
+      {
+        "path": "src/lava/magma/core/learning/symbolic_equation.py",
+        "line": 847,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/core/learning/symbolic_equation.py#L847"
+      },
+      {
+        "path": "src/lava/magma/core/learning/product_series.py",
+        "line": 366,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/core/learning/product_series.py#L366"
+      }
+    ],
+    "filename": "F19-specify-learning-expression-and-numeric-conformance.md",
+    "implementation_note": "No implementation change in this maintenance batch."
+  },
+  {
+    "id": "F20",
+    "chunk": "08",
+    "title": "Normalize delayed synapse validation",
+    "priority": "P1",
+    "effort": "S",
+    "evidence_status": "Reproduced for sparse int32 and source confirmed",
+    "refs": [
+      [
+        "src/lava/proc/sparse/process.py",
+        "def _validate_delays"
+      ],
+      [
+        "src/lava/proc/dense/process.py",
+        "def _validate_delays"
+      ]
+    ],
+    "problem": "DelaySparse rejects an int32 sparse delay matrix on this 64-bit environment because its validation compares dtype to int. Buffer capacity also needs an explicit relationship to supplied delays.",
+    "change": "Share a validation helper for scalar and array integer delays using integer-subtype checks. Reject bool, negative and out-of-range delays deliberately. Check shape compatibility and max_delay capacity before allocating buffers. Preserve sparse storage and define whether later updates can exceed initial capacity.",
+    "acceptance": [
+      "int32, int64 and NumPy integer scalars work where supported; equivalent dense and sparse inputs agree.",
+      "A max_delay below an actual delay fails at construction with a clear message.",
+      "Zero-delay, maximum-delay, recurrent and graded-spike golden outputs remain unchanged."
+    ],
+    "risk": "Delay zero represents the established buffered execution timing. Do not silently change it to same-timestep delivery.",
+    "dependencies": "F06",
+    "diagnostic": "P01",
+    "implementation_status": "Proposed",
+    "sources": [
+      {
+        "path": "src/lava/proc/sparse/process.py",
+        "line": 283,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/proc/sparse/process.py#L283"
+      },
+      {
+        "path": "src/lava/proc/dense/process.py",
+        "line": 266,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/proc/dense/process.py#L266"
+      }
+    ],
+    "filename": "F20-normalize-delayed-synapse-validation.md",
+    "implementation_note": "No implementation change in this maintenance batch."
+  },
+  {
+    "id": "F21",
+    "chunk": "08",
+    "title": "Resolve temporal convolution fixed point semantics",
+    "priority": "P1",
+    "effort": "M",
+    "evidence_status": "Source confirmed contract gap",
+    "refs": [
+      [
+        "src/lava/proc/conv_in_time/models.py",
+        "class PyConvInTimeFixed"
+      ],
+      [
+        "src/lava/proc/conv_in_time/models.py",
+        "def clamp_precision"
+      ]
+    ],
+    "problem": "The model tagged fixed_pt declares floating weights, output and accumulation buffers. Its 24-bit clamp helper is not called by the inherited execution path. The tag therefore lacks an explicit implemented fixed-point contract.",
+    "change": "Define the intended input, weight, accumulator and output widths and whether arithmetic wraps or saturates. Implement that behavior with explicit intermediate dtypes and rounding, or mark the current model unsupported for bit-accurate use until conformance exists. Keep floating-point behavior separate.",
+    "acceptance": [
+      "A reference integer convolution matches multi-step outputs at overflow and underflow boundaries.",
+      "Negative values, graded inputs, multi-output kernels and recurrent timing are covered.",
+      "Selecting fixed_pt cannot silently select floating behavior advertised as bit accurate."
+    ],
+    "risk": "Do not apply clamp_precision blindly: its helper wraps signed values and may differ from the intended hardware arithmetic. The suspected flattened-roll cross-row bug was rejected because the first column is cleared before rolling.",
+    "dependencies": "F31",
+    "diagnostic": "",
+    "implementation_status": "Proposed",
+    "sources": [
+      {
+        "path": "src/lava/proc/conv_in_time/models.py",
+        "line": 88,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/proc/conv_in_time/models.py#L88"
+      },
+      {
+        "path": "src/lava/proc/conv_in_time/models.py",
+        "line": 98,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/proc/conv_in_time/models.py#L98"
+      }
+    ],
+    "filename": "F21-resolve-temporal-convolution-fixed-point-semantics.md",
+    "implementation_note": "No implementation change in this maintenance batch."
+  },
+  {
+    "id": "F22",
+    "chunk": "08",
+    "title": "Keep S4D expansion matrices sparse",
+    "priority": "P2",
+    "effort": "S then M",
+    "evidence_status": "Source confirmed",
+    "refs": [
+      [
+        "src/lava/proc/s4d/process.py",
+        "conn_weights = np.kron"
+      ],
+      [
+        "src/lava/proc/s4d/process.py",
+        "self.conn_weights = Var"
+      ],
+      [
+        "src/lava/proc/s4d/models.py",
+        "class SubDenseLayerModel"
+      ]
+    ],
+    "problem": "S4D layer construction materializes a dense Kronecker expansion that is fed to Sparse processes. The conn_weights Var shape also describes the layer shape rather than the actual expansion matrix.",
+    "change": "Construct expansion/reduction maps directly with sparse eye/kron or CSR indices. Align the declared Var shape with its actual matrix, and clarify whether this connectivity belongs in immutable process parameters or a mutable Var. Validate d_states and coefficient broadcasting explicitly.",
+    "acceptance": [
+      "Small dense-reference and sparse implementations produce identical state/output sequences.",
+      "Construction storage scales with nonzero connections rather than the full expanded matrix area.",
+      "Coefficient shape errors and invalid d_states fail before compilation; alias access remains correct."
+    ],
+    "risk": "Changing conn_weights representation can affect serialization and model builders. Preserve a compatibility adapter for existing saved graphs.",
+    "dependencies": "F20 F28",
+    "diagnostic": "",
+    "implementation_status": "Proposed",
+    "sources": [
+      {
+        "path": "src/lava/proc/s4d/process.py",
+        "line": 207,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/proc/s4d/process.py#L207"
+      },
+      {
+        "path": "src/lava/proc/s4d/process.py",
+        "line": 238,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/proc/s4d/process.py#L238"
+      },
+      {
+        "path": "src/lava/proc/s4d/models.py",
+        "line": 197,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/proc/s4d/models.py#L197"
+      }
+    ],
+    "filename": "F22-keep-s4d-expansion-matrices-sparse.md",
+    "implementation_note": "No implementation change in this maintenance batch."
+  },
+  {
+    "id": "F23",
+    "chunk": "08",
+    "title": "Create a process model conformance matrix",
+    "priority": "P2",
+    "effort": "M",
+    "evidence_status": "Design improvement from source inventory",
+    "refs": [
+      [
+        "src/lava/proc/lif/models.py",
+        "class"
+      ],
+      [
+        "src/lava/proc/atrlif/models.py",
+        "TODO do clipping"
+      ],
+      [
+        "src/lava/proc/clp/nsm/models.py",
+        "class PyAllocatorModel"
+      ],
+      [
+        "src/lava/proc/sdn/models.py",
+        "class"
+      ]
+    ],
+    "problem": "Many process families expose float and fixed-point models with different state and overflow semantics. Existing tests are valuable, but the repository does not expose one concise support matrix for model tags, dtypes, timing, learning and backend availability.",
+    "change": "Inventory each process/model pair and its supported combinations. Establish golden boundary vectors and differential reference tests for neurons, resonators, sigma-delta, dense/sparse synapses, convolutions and continual-learning allocation. Specify allocator behavior at prototype capacity. Optimize only measured hotspots after conformance is stable.",
+    "acceptance": [
+      "Every shipped public model has an explicit backend/tag/dtype/timing row.",
+      "Boundary fixtures cover sign, rounding, saturation or wrap, empty activity and repeated-run state.",
+      "Any optimization reports output equivalence plus latency and memory on a fixed workload and machine."
+    ],
+    "risk": "TODO comments are investigation prompts, not proof of numerical errors. No neuromorphic hardware fidelity was validated in this audit.",
+    "dependencies": "F18 F20 F21 F31",
+    "diagnostic": "",
+    "implementation_status": "Proposed",
+    "sources": [
+      {
+        "path": "src/lava/proc/lif/models.py",
+        "line": 20,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/proc/lif/models.py#L20"
+      },
+      {
+        "path": "src/lava/proc/atrlif/models.py",
+        "line": 195,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/proc/atrlif/models.py#L195"
+      },
+      {
+        "path": "src/lava/proc/clp/nsm/models.py",
+        "line": 117,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/proc/clp/nsm/models.py#L117"
+      },
+      {
+        "path": "src/lava/proc/sdn/models.py",
+        "line": 33,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/proc/sdn/models.py#L33"
+      }
+    ],
+    "filename": "F23-create-a-process-model-conformance-matrix.md",
+    "implementation_note": "No implementation change in this maintenance batch."
+  },
+  {
+    "id": "F24",
+    "chunk": "09",
+    "title": "Remove dense identity allocation from network composition",
+    "priority": "P1",
+    "effort": "S",
+    "evidence_status": "Source confirmed complexity issue",
+    "refs": [
+      [
+        "src/lava/networks/network.py",
+        "weightsI = csr_matrix(np.eye"
+      ],
+      [
+        "src/lava/networks/gradedvecnetwork.py",
+        "weightsI = np.eye"
+      ],
+      [
+        "src/lava/networks/gradedvecnetwork.py",
+        "# TODO: add checks"
+      ]
+    ],
+    "problem": "Identity wiring constructs an n by n dense array before converting it to CSR; vector products create more dense identities. This is quadratic temporary storage for a linear-size identity graph. ProductVec also indexes its two inputs without validating arity.",
+    "change": "Use direct sparse identity construction with the existing dtype and shape semantics. Validate vector compatibility and ProductVec arity before wiring any edges. Make composition return values consistent; decide whether NetworkList addition should copy instead of mutating an existing expression.",
+    "acceptance": [
+      "Small-network wiring and numerical outputs match the old implementation.",
+      "A large identity connection allocates O(n) sparse data with no dense n by n intermediate.",
+      "Invalid product inputs leave both graphs unchanged; chained composition follows the documented return contract."
+    ],
+    "risk": "Sparse construction is low risk; composition mutability is a separate API decision. Avoid changing both in the same patch.",
+    "dependencies": "F28",
+    "diagnostic": "",
+    "implementation_status": "Partial",
+    "sources": [
+      {
+        "path": "src/lava/networks/network.py",
+        "line": 101,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/networks/network.py#L101"
+      },
+      {
+        "path": "src/lava/networks/gradedvecnetwork.py",
+        "line": 161,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/networks/gradedvecnetwork.py#L161"
+      },
+      {
+        "path": "src/lava/networks/gradedvecnetwork.py",
+        "line": 211,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/networks/gradedvecnetwork.py#L211"
+      }
+    ],
+    "filename": "F24-remove-dense-identity-allocation-from-network-composition.md",
+    "implementation_note": "AlgebraicVector connections and GradedVec products build CSR identity weights directly. Tests forbid np.eye and verify 10,000-dimensional sparse structure. Broader composition validation remains open."
+  },
+  {
+    "id": "F25",
+    "chunk": "09",
+    "title": "Validate IO datasets and buffering contracts",
+    "priority": "P1",
+    "effort": "S then M",
+    "evidence_status": "Reproduced interval error and source confirmed",
+    "refs": [
+      [
+        "src/lava/proc/io/dataloader.py",
+        "data, ground_truth = dataset[0]"
+      ],
+      [
+        "src/lava/proc/io/dataloader.py",
+        "offset % interval"
+      ],
+      [
+        "src/lava/proc/io/source.py",
+        "buffer = self.data.shape[-1]"
+      ],
+      [
+        "src/lava/proc/io/utils.py",
+        "class ChannelConfig"
+      ]
+    ],
+    "problem": "A zero dataloader interval raises ZeroDivisionError rather than a useful validation error. The public Iterable annotation masks required indexing and length operations. Ring buffers assume a nonempty time dimension.",
+    "change": "Define an indexable sized dataset protocol or implement a separate streaming adapter. Validate nonempty datasets, sample/label shapes, positive intervals and buffer lengths before process construction. Preserve offset normalization. Document blocking, drop, FIFO and accumulation policies and expose dropped-sample counters where applicable.",
+    "acceptance": [
+      "Empty datasets, generators passed to the indexed API, inconsistent samples and zero intervals fail clearly.",
+      "Source/sink wraparound, padding, offset and label alignment match fixtures.",
+      "Injector/extractor close obeys the channel cancellation contract and drop counters match intentional overload."
+    ],
+    "risk": "Infinite streams require separate end-of-stream and cancellation semantics; do not silently materialize arbitrary iterables.",
+    "dependencies": "F06 F16",
+    "diagnostic": "I01",
+    "implementation_status": "Proposed",
+    "sources": [
+      {
+        "path": "src/lava/proc/io/dataloader.py",
+        "line": 89,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/proc/io/dataloader.py#L89"
+      },
+      {
+        "path": "src/lava/proc/io/dataloader.py",
+        "line": 43,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/proc/io/dataloader.py#L43"
+      },
+      {
+        "path": "src/lava/proc/io/source.py",
+        "line": 42,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/proc/io/source.py#L42"
+      },
+      {
+        "path": "src/lava/proc/io/utils.py",
+        "line": 196,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/proc/io/utils.py#L196"
+      }
+    ],
+    "filename": "F25-validate-io-datasets-and-buffering-contracts.md",
+    "implementation_note": "No implementation change in this maintenance batch."
+  },
+  {
+    "id": "F26",
+    "chunk": "08",
+    "title": "Make monitor probe limits explicit",
+    "priority": "P2",
+    "effort": "S then M",
+    "evidence_status": "Source confirmed documented limitation",
+    "refs": [
+      [
+        "src/lava/proc/monitor/process.py",
+        "Note: Monitor currently"
+      ],
+      [
+        "src/lava/proc/monitor/process.py",
+        "self.new_ref_port_name"
+      ],
+      [
+        "src/lava/proc/monitor/models.py",
+        "class"
+      ]
+    ],
+    "problem": "The Monitor documentation limits an instance to one probe, while probe construction includes dynamic naming machinery that can look like multi-probe support. Repeated probes should not accidentally create partially supported model state.",
+    "change": "First enforce and document the current single-probe contract with an early descriptive error. Treat multi-probe support as a separate feature using a typed probe registry, unique names, per-probe shapes/dtypes and a clear memory budget. Keep visualization consumers independent of simulation execution.",
+    "acceptance": [
+      "A second unsupported probe fails before changing ports or Vars.",
+      "Existing one-probe monitoring remains compatible.",
+      "If multi-probe support is implemented, mixed Var/OutPort probes produce independent correctly shaped data and bounded storage."
+    ],
+    "risk": "This is a documented limitation, not a claimed regression. A 3D viewer should consume exported observations rather than drive the runtime.",
+    "dependencies": "F23",
+    "diagnostic": "",
+    "implementation_status": "Proposed",
+    "sources": [
+      {
+        "path": "src/lava/proc/monitor/process.py",
+        "line": 21,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/proc/monitor/process.py#L21"
+      },
+      {
+        "path": "src/lava/proc/monitor/process.py",
+        "line": 86,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/proc/monitor/process.py#L86"
+      },
+      {
+        "path": "src/lava/proc/monitor/models.py",
+        "line": 17,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/proc/monitor/models.py#L17"
+      }
+    ],
+    "filename": "F26-make-monitor-probe-limits-explicit.md",
+    "implementation_note": "No implementation change in this maintenance batch."
+  },
+  {
+    "id": "F27",
+    "chunk": "10",
+    "title": "Repair checkpoint paths and atomic persistence",
+    "priority": "P1",
+    "effort": "S then M",
+    "evidence_status": "Reproduced",
+    "refs": [
+      [
+        "src/lava/utils/serialization.py",
+        "if \".\" not in filename"
+      ],
+      [
+        "src/lava/utils/serialization.py",
+        "if not os.path.isfile(filename)"
+      ],
+      [
+        "src/lava/utils/serialization.py",
+        "pickle.load"
+      ]
+    ],
+    "problem": "save(model, path_without_suffix) adds .pickle but load(the_same_path) does not. The suffix check searches the whole path, so dots in directories change behavior. A list containing a non-Process value is accepted.",
+    "change": "Normalize paths through a shared helper using the basename suffix, validate every list member, and write a temporary sibling followed by atomic replace. Define exact-file precedence so existing suffixless files remain readable. Label pickle loading as trusted-local and retain it for compatibility; design a future versioned data checkpoint separately from executable-object persistence.",
+    "acceptance": [
+      "Round trips work with and without suffixes, dotted parent directories and explicit existing filenames.",
+      "Invalid process list elements fail before opening the destination.",
+      "Interrupted writes preserve the last valid checkpoint; legacy valid pickle files still load through the explicit legacy path."
+    ],
+    "risk": "Post-load type checks cannot make untrusted pickle safe. Do not promise portable or secure exchange merely by adding a schema field.",
+    "dependencies": "None",
+    "diagnostic": "U01",
+    "implementation_status": "Partial",
+    "sources": [
+      {
+        "path": "src/lava/utils/serialization.py",
+        "line": 74,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/utils/serialization.py#L74"
+      },
+      {
+        "path": "src/lava/utils/serialization.py",
+        "line": 116,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/utils/serialization.py#L116"
+      },
+      {
+        "path": "src/lava/utils/serialization.py",
+        "line": 121,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/utils/serialization.py#L121"
+      }
+    ],
+    "filename": "F27-repair-checkpoint-paths-and-atomic-persistence.md",
+    "implementation_note": "Checkpoint suffix handling uses the basename; load has an exact-path-first fallback; save validates list members before opening the destination. Atomic writes, portable formats and version metadata remain open."
+  },
+  {
+    "id": "F28",
+    "chunk": "10",
+    "title": "Make sparse queries nonmutating",
+    "priority": "P1",
+    "effort": "S",
+    "evidence_status": "Reproduced",
+    "refs": [
+      [
+        "src/lava/utils/sparse.py",
+        "mat.data[idx] = 1"
+      ]
+    ],
+    "problem": "find(explicit_zeros=True) temporarily replaces stored zeros with ones. It fails on read-only input, and an injected downstream failure leaves the original matrix modified.",
+    "change": "Read coordinates and values without mutating the caller. Use a copy-and-canonicalize strategy first if needed to preserve the existing ordering and duplicate-coordinate semantics; optimize to CSR index traversal only after those semantics are explicit. Preserve explicit zeros and document supported sparse formats.",
+    "acceptance": [
+      "Read-only CSR inputs work and original data/indices/indptr never change, including on exceptions.",
+      "Unsorted indices, duplicates, explicit zeros and empty rows produce the documented coordinates and values.",
+      "Tests verify callers such as sparse Var access and learning still receive the expected ordering."
+    ],
+    "risk": "A raw CSR traversal may expose duplicates that scipy.find previously coalesced. Nonmutation must not silently change this contract.",
+    "dependencies": "None",
+    "diagnostic": "U02 U03",
+    "implementation_status": "Implemented; CPU CI verified",
+    "sources": [
+      {
+        "path": "src/lava/utils/sparse.py",
+        "line": 26,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/utils/sparse.py#L26"
+      }
+    ],
+    "filename": "F28-make-sparse-queries-nonmutating.md",
+    "implementation_note": "Explicit-zero queries work on a private copy. Tests cover read-only inputs, downstream exceptions, unsorted/duplicate storage and input preservation. Hosted Linux/macOS CPU suites, including sparse model tests, now pass."
+  },
+  {
+    "id": "F29",
+    "chunk": "10",
+    "title": "Make dataset download and storage explicit",
+    "priority": "P2",
+    "effort": "M",
+    "evidence_status": "Source confirmed",
+    "refs": [
+      [
+        "src/lava/utils/dataloader/mnist.py",
+        "def __init__(self, data_path"
+      ],
+      [
+        "src/lava/utils/dataloader/mnist.py",
+        "urllib.request.urlopen(url)"
+      ],
+      [
+        "src/lava/utils/dataloader/mnist.py",
+        "allow_pickle=True"
+      ]
+    ],
+    "problem": "MNIST downloads use a package-local temporary directory even with a custom destination, begin with an HTTP mirror, have no request timeout or integrity manifest, and store object arrays loaded with pickle enabled.",
+    "change": "Use a user-selected or platform cache directory, unique temporary files, HTTPS sources, finite timeouts and verified dataset hashes. Validate IDX headers and payload lengths before reshaping. Store named numeric arrays in NPZ without pickle. Make download permission explicit and retain a deliberate migration path for trusted old caches.",
+    "acceptance": [
+      "Read-only installed packages can load/download into a writable user cache.",
+      "Truncation, wrong hash, malformed headers and network timeout leave no valid-looking partial cache.",
+      "Offline fixture tests exercise conversion without downloading the full dataset; image/label values match reference fixtures."
+    ],
+    "risk": "No current mirror availability was tested. Fetching a URL successfully is not an integrity check.",
+    "dependencies": "F27",
+    "diagnostic": "",
+    "implementation_status": "Proposed",
+    "sources": [
+      {
+        "path": "src/lava/utils/dataloader/mnist.py",
+        "line": 21,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/utils/dataloader/mnist.py#L21"
+      },
+      {
+        "path": "src/lava/utils/dataloader/mnist.py",
+        "line": 54,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/utils/dataloader/mnist.py#L54"
+      },
+      {
+        "path": "src/lava/utils/dataloader/mnist.py",
+        "line": 39,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/utils/dataloader/mnist.py#L39"
+      }
+    ],
+    "filename": "F29-make-dataset-download-and-storage-explicit.md",
+    "implementation_note": "No implementation change in this maintenance batch."
+  },
+  {
+    "id": "F30",
+    "chunk": "11",
+    "title": "Make tutorials finite portable and reproducible",
+    "priority": "P2",
+    "effort": "M",
+    "evidence_status": "Source confirmed",
+    "refs": [
+      [
+        "tests/lava/tutorials/test_tutorials.py",
+        "timeout=-1"
+      ],
+      [
+        "tests/lava/tutorials/test_tutorials.py",
+        "from test import support"
+      ],
+      [
+        "tests/lava/tutorials/test_tutorials.py",
+        "NamedTemporaryFile"
+      ]
+    ],
+    "problem": "Tutorial execution has an unlimited notebook timeout, relies on CPython test support, manipulates global working directory and Python path details, and uses a temporary-file pattern that needs cross-platform care. The inventory contains 22 notebooks.",
+    "change": "Use isolated working directories and kernels, finite per-cell and per-notebook timeouts, public namespace APIs and os.pathsep. Declare network/dataset/hardware requirements in notebook metadata. Maintain a fast CPU smoke notebook, a full scheduled tutorial lane and a generated API reference tied to the release.",
+    "acceptance": [
+      "A deliberately hanging cell is stopped with its notebook and cell identified.",
+      "The CPU smoke notebook runs from an installed wheel outside the checkout on advertised platforms.",
+      "All 22 notebooks have a recorded execution policy; hardware/network exclusions are visible rather than silent."
+    ],
+    "risk": "Notebook JSON and source cells were inventoried but not executed in this audit. Existing outputs are not fresh validation.",
+    "dependencies": "F01 F04 F29",
+    "diagnostic": "",
+    "implementation_status": "Partial",
+    "sources": [
+      {
+        "path": "tests/lava/tutorials/test_tutorials.py",
+        "line": 117,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/tests/lava/tutorials/test_tutorials.py#L117"
+      },
+      {
+        "path": "tests/lava/tutorials/test_tutorials.py",
+        "line": 14,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/tests/lava/tutorials/test_tutorials.py#L14"
+      },
+      {
+        "path": "tests/lava/tutorials/test_tutorials.py",
+        "line": 110,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/tests/lava/tutorials/test_tutorials.py#L110"
+      }
+    ],
+    "filename": "F30-make-tutorials-finite-portable-and-reproducible.md",
+    "implementation_note": "Added the Docusaurus wiki, architecture/API guides, all 32 specifications, audit chunks and module index. Notebook modernization remains open."
+  },
+  {
+    "id": "F31",
+    "chunk": "11",
+    "title": "Establish regression and performance evidence",
+    "priority": "P1",
+    "effort": "M",
+    "evidence_status": "Observed test results and design improvement",
+    "refs": [
+      [
+        "tests/lava/magma/runtime/test_exception_handling.py",
+        "class"
+      ],
+      [
+        "tests/lava/magma/runtime/test_leakage.py",
+        "class"
+      ],
+      [
+        "tests/lava/proc/dense/test_learning.py",
+        "class"
+      ]
+    ],
+    "problem": "The audit run completed with 340 passed, 312 failed, 5 skipped and 4 teardown errors. The failures shared IPC startup restrictions and cleanup cascades; they do not demonstrate 312 independent product defects. Runtime success remains unverified here.",
+    "change": "Retain the audit diagnostics as failing-before/passing-after regressions for each small fix. Run the full CPU suite on an IPC-capable runner with fixed dependencies. Add fault-injection lifecycle cases and measured baselines for compile time, startup latency, steps per second, peak memory and retained resources. Store workload, hardware, dtype, seed and dependency metadata with every benchmark.",
+    "acceptance": [
+      "The reference CPU lane is green with all unexpected skips investigated.",
+      "Every confirmed fix has a narrow regression test that checks public behavior or a meaningful invariant.",
+      "Performance claims include baseline, modified result, variance and equivalent outputs; no pass/fail gate is based on an unmeasured target."
+    ],
+    "risk": "Do not lower coverage or delete failing tests to establish the baseline. Hardware and cross-platform evidence are separate gates.",
+    "dependencies": "F04 F13",
+    "diagnostic": "",
+    "implementation_status": "Partial",
+    "sources": [
+      {
+        "path": "tests/lava/magma/runtime/test_exception_handling.py",
+        "line": 21,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/tests/lava/magma/runtime/test_exception_handling.py#L21"
+      },
+      {
+        "path": "tests/lava/magma/runtime/test_leakage.py",
+        "line": 27,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/tests/lava/magma/runtime/test_leakage.py#L27"
+      },
+      {
+        "path": "tests/lava/proc/dense/test_learning.py",
+        "line": 17,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/tests/lava/proc/dense/test_learning.py#L17"
+      }
+    ],
+    "filename": "F31-establish-regression-and-performance-evidence.md",
+    "implementation_note": "Added focused regressions and explicit CPU/package/docs lanes. Full runtime confirmation and broader numerical/performance gates remain open."
+  },
+  {
+    "id": "F32",
+    "chunk": "12",
+    "title": "Define the first neurosemantic vertical slice",
+    "priority": "P3",
+    "effort": "L for specification then staged experiments",
+    "evidence_status": "Proposed future architecture",
+    "refs": [
+      [
+        "src/lava/magma/core/process/process.py",
+        "class AbstractProcess"
+      ],
+      [
+        "src/lava/magma/core/model/py/model.py",
+        "class PyLoihiProcessModel"
+      ],
+      [
+        "src/lava/proc/s4d/models.py",
+        "class S4dModel"
+      ],
+      [
+        "src/lava/networks/network.py",
+        "class Network"
+      ]
+    ],
+    "problem": "The repository provides neuromorphic execution primitives, but no reviewed source implements a complete language-model training stack, Agent Client Protocol adapter, semantic schema store, 3D graph product or game-learning engine.",
+    "change": "Define a backend-neutral SemanticRecord with stable ID, schema version, typed features, provenance, time and optional task/company/industry/context fields. Encode records into typed tensors/events through a versioned codec. Implement one small contextual classification/retrieval task with a baseline, an existing Lava process implementation and an evaluator. Add a separately versioned agent adapter, graph projection and game adapter only after this slice meets its accuracy, latency and memory gates.",
+    "acceptance": [
+      "Codec round trips preserve all declared fields, reject unsupported versions and expose any lossy transform.",
+      "Two classifier branches can run with independent recorded state and a documented deterministic aggregation policy.",
+      "Graph entities and relationships remain meaningful without 3D coordinates; the viewer is a projection.",
+      "An agent request supports capability discovery, cancellation, typed errors and explicit permission boundaries through the selected protocol revision."
+    ],
+    "risk": "ACP is a client-agent interoperability protocol, not a neural encoding format. Confirm the intended protocol and revision before implementation. The earlier phrase jev style is unresolved and must not silently become a JEPA specification. No language-model quality or neuromorphic advantage is established.",
+    "dependencies": "F11 F12 F13 F14 F18 F23 F31",
+    "diagnostic": "",
+    "implementation_status": "Proposed",
+    "sources": [
+      {
+        "path": "src/lava/magma/core/process/process.py",
+        "line": 37,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/core/process/process.py#L37"
+      },
+      {
+        "path": "src/lava/magma/core/model/py/model.py",
+        "line": 261,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/magma/core/model/py/model.py#L261"
+      },
+      {
+        "path": "src/lava/proc/s4d/models.py",
+        "line": 22,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/proc/s4d/models.py#L22"
+      },
+      {
+        "path": "src/lava/networks/network.py",
+        "line": 13,
+        "url": "https://github.com/DarbotLM/LavaLM/blob/646fa535764c3b0bd1bf24b956aaf64561bf97f6/src/lava/networks/network.py#L13"
+      }
+    ],
+    "filename": "F32-define-the-first-neurosemantic-vertical-slice.md",
+    "implementation_note": "No implementation change in this maintenance batch."
+  }
+]

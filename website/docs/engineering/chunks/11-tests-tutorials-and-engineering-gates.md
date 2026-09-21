@@ -1,0 +1,189 @@
+# 11 Tests tutorials and engineering gates
+
+The existing suite has substantial value and should remain the behavioral baseline. Separate pure numerical tests, multiprocessing integration, notebooks and optional hardware. Establish repeatable evidence before changing dependencies, numerical kernels or execution backends.
+
+## Implementation specifications
+
+- [F30 Make tutorials finite portable and reproducible](../specs/F30-make-tutorials-finite-portable-and-reproducible.md) — P2; M; Source confirmed.
+- [F31 Establish regression and performance evidence](../specs/F31-establish-regression-and-performance-evidence.md) — P1; M; Observed test results and design improvement.
+
+## Coverage and boundaries
+
+176 tracked files belong to this inventory chunk. The file manifest distinguishes structural scanning from focused source review. Test execution does not establish all-path correctness.
+
+- `tests/__init__.py` — AST and structural risk scan.
+- `tests/lava/__init__.py` — AST and structural risk scan.
+- `tests/lava/frameworks/__init__.py` — AST and structural risk scan.
+- `tests/lava/frameworks/test_frameworks.py` — AST and structural risk scan.
+- `tests/lava/magma/__init__.py` — AST and structural risk scan.
+- `tests/lava/magma/compiler/__init__.py` — AST and structural risk scan.
+- `tests/lava/magma/compiler/builders/__init__.py` — AST and structural risk scan.
+- `tests/lava/magma/compiler/builders/test_builder.py` — AST and structural risk scan.
+- `tests/lava/magma/compiler/channels/__init__.py` — AST and structural risk scan.
+- `tests/lava/magma/compiler/channels/test_pypychannel.py` — AST and structural risk scan.
+- `tests/lava/magma/compiler/subcompilers/__init__.py` — AST and structural risk scan.
+- `tests/lava/magma/compiler/subcompilers/py/__init__.py` — AST and structural risk scan.
+- `tests/lava/magma/compiler/subcompilers/py/test_pyproc_compiler.py` — AST and structural risk scan.
+- `tests/lava/magma/compiler/subcompilers/test_channel_builders_factory.py` — AST and structural risk scan.
+- `tests/lava/magma/compiler/subcompilers/test_channel_map_updater.py` — AST and structural risk scan.
+- `tests/lava/magma/compiler/test_channel_builder.py` — AST and structural risk scan.
+- `tests/lava/magma/compiler/test_channel_map.py` — AST and structural risk scan.
+- `tests/lava/magma/compiler/test_compiler.py` — AST and structural risk scan.
+- `tests/lava/magma/compiler/test_node.py` — AST and structural risk scan.
+- `tests/lava/magma/core/__init__.py` — AST and structural risk scan.
+- `tests/lava/magma/core/learning/__init__.py` — AST and structural risk scan.
+- `tests/lava/magma/core/learning/test_learning_rule.py` — AST and structural risk scan.
+- `tests/lava/magma/core/learning/test_learning_rule_applier.py` — AST and structural risk scan.
+- `tests/lava/magma/core/learning/test_product_series.py` — AST and structural risk scan.
+- `tests/lava/magma/core/learning/test_random.py` — AST and structural risk scan.
+- `tests/lava/magma/core/learning/test_symbolic_equation.py` — AST and structural risk scan.
+- `tests/lava/magma/core/learning/test_utils.py` — AST and structural risk scan.
+- `tests/lava/magma/core/model/__init__.py` — AST and structural risk scan.
+- `tests/lava/magma/core/model/py/__init__.py` — AST and structural risk scan.
+- `tests/lava/magma/core/model/py/test_model.py` — AST and structural risk scan.
+- `tests/lava/magma/core/model/py/test_ports.py` — AST and structural risk scan.
+- `tests/lava/magma/core/model/test_decorators.py` — AST and structural risk scan.
+- `tests/lava/magma/core/model/test_sub_model.py` — AST and structural risk scan.
+- `tests/lava/magma/core/process/__init__.py` — AST and structural risk scan.
+- `tests/lava/magma/core/process/ports/__init__.py` — AST and structural risk scan.
+- `tests/lava/magma/core/process/ports/test_ports.py` — AST and structural risk scan.
+- `tests/lava/magma/core/process/ports/test_virtual_ports_in_process.py` — AST and structural risk scan.
+- `tests/lava/magma/core/process/test_lif_dense_lif.py` — AST and structural risk scan.
+- `tests/lava/magma/core/process/test_process.py` — AST and structural risk scan.
+- `tests/lava/magma/core/process/test_variable.py` — AST and structural risk scan.
+- `tests/lava/magma/runtime/__init__.py` — AST and structural risk scan.
+- `tests/lava/magma/runtime/test_async_protocol.py` — AST and structural risk scan.
+- `tests/lava/magma/runtime/test_connection_config.py` — AST and structural risk scan; focused review with cited finding.
+- `tests/lava/magma/runtime/test_context_manager.py` — AST and structural risk scan.
+- `tests/lava/magma/runtime/test_exception_handling.py` — AST and structural risk scan; focused review with cited finding.
+- `tests/lava/magma/runtime/test_external_pipe_io.py` — AST and structural risk scan.
+- `tests/lava/magma/runtime/test_get_set_non_determinism.py` — AST and structural risk scan.
+- `tests/lava/magma/runtime/test_get_set_var.py` — AST and structural risk scan.
+- `tests/lava/magma/runtime/test_io_ports.py` — AST and structural risk scan.
+- `tests/lava/magma/runtime/test_leakage.py` — AST and structural risk scan; focused review with cited finding.
+- `tests/lava/magma/runtime/test_loihi_protocol.py` — AST and structural risk scan.
+- `tests/lava/magma/runtime/test_loihi_with_async_protocol.py` — AST and structural risk scan.
+- `tests/lava/magma/runtime/test_pause_requested_from_model.py` — AST and structural risk scan.
+- `tests/lava/magma/runtime/test_ref_var_ports.py` — AST and structural risk scan.
+- `tests/lava/magma/runtime/test_run_continuously_and_pause.py` — AST and structural risk scan.
+- `tests/lava/magma/runtime/test_runtime.py` — AST and structural risk scan.
+- `tests/lava/magma/runtime/test_runtime_service.py` — AST and structural risk scan.
+- `tests/lava/networks/__init__.py` — AST and structural risk scan.
+- `tests/lava/networks/test_networks.py` — AST and structural risk scan.
+- `tests/lava/proc/__init__.py` — AST and structural risk scan.
+- `tests/lava/proc/atrlif/__init__.py` — AST and structural risk scan.
+- `tests/lava/proc/atrlif/test_models.py` — AST and structural risk scan.
+- `tests/lava/proc/atrlif/test_process.py` — AST and structural risk scan.
+- `tests/lava/proc/bit_check/__init__.py` — AST and structural risk scan.
+- `tests/lava/proc/bit_check/test_models.py` — AST and structural risk scan.
+- `tests/lava/proc/bit_check/test_process.py` — AST and structural risk scan.
+- `tests/lava/proc/clp/__init__.py` — AST and structural risk scan.
+- `tests/lava/proc/clp/integration/__init__.py` — AST and structural risk scan.
+- `tests/lava/proc/clp/integration/test_clp_one_shot.py` — AST and structural risk scan.
+- `tests/lava/proc/clp/novelty_detector/__init__.py` — AST and structural risk scan.
+- `tests/lava/proc/clp/novelty_detector/test_models.py` — AST and structural risk scan.
+- `tests/lava/proc/clp/nsm/__init__.py` — AST and structural risk scan.
+- `tests/lava/proc/clp/nsm/test_nsm.py` — AST and structural risk scan.
+- `tests/lava/proc/clp/prototype_lif/__init__.py` — AST and structural risk scan.
+- `tests/lava/proc/clp/prototype_lif/test_models.py` — AST and structural risk scan.
+- `tests/lava/proc/conv/__init__.py` — AST and structural risk scan.
+- `tests/lava/proc/conv/ground_truth/gt_conv_paris_0.npz` — inventory and content classification.
+- `tests/lava/proc/conv/ground_truth/gt_conv_paris_1.npz` — inventory and content classification.
+- `tests/lava/proc/conv/ground_truth/gt_conv_paris_2.npz` — inventory and content classification.
+- `tests/lava/proc/conv/ground_truth/gt_conv_paris_3.npz` — inventory and content classification.
+- `tests/lava/proc/conv/ground_truth/gt_conv_paris_4.npz` — inventory and content classification.
+- `tests/lava/proc/conv/ground_truth/gt_conv_paris_5.npz` — inventory and content classification.
+- `tests/lava/proc/conv/ground_truth/gt_conv_paris_6.npz` — inventory and content classification.
+- `tests/lava/proc/conv/ground_truth/gt_conv_paris_7.npz` — inventory and content classification.
+- `tests/lava/proc/conv/ground_truth/gt_conv_paris_8.npz` — inventory and content classification.
+- `tests/lava/proc/conv/ground_truth/gt_conv_paris_9.npz` — inventory and content classification.
+- `tests/lava/proc/conv/test_process.py` — AST and structural risk scan.
+- `tests/lava/proc/conv/test_utils.py` — AST and structural risk scan.
+- `tests/lava/proc/conv_in_time/__init__.py` — AST and structural risk scan.
+- `tests/lava/proc/conv_in_time/gts/q_weights.npy` — inventory and content classification.
+- `tests/lava/proc/conv_in_time/gts/spike_input.npy` — inventory and content classification.
+- `tests/lava/proc/conv_in_time/gts/torch_output.npy` — inventory and content classification.
+- `tests/lava/proc/conv_in_time/test_process.py` — AST and structural risk scan.
+- `tests/lava/proc/dense/__init__.py` — AST and structural risk scan.
+- `tests/lava/proc/dense/test_learning.py` — AST and structural risk scan; focused review with cited finding.
+- `tests/lava/proc/dense/test_models.py` — AST and structural risk scan.
+- `tests/lava/proc/dense/test_process.py` — AST and structural risk scan.
+- `tests/lava/proc/dense/test_stdp_sim.py` — AST and structural risk scan.
+- `tests/lava/proc/graded/test_graded.py` — AST and structural risk scan.
+- `tests/lava/proc/io/__init__.py` — AST and structural risk scan.
+- `tests/lava/proc/io/test_dataloader.py` — AST and structural risk scan.
+- `tests/lava/proc/io/test_extractor.py` — AST and structural risk scan.
+- `tests/lava/proc/io/test_injector.py` — AST and structural risk scan.
+- `tests/lava/proc/io/test_source_sink.py` — AST and structural risk scan.
+- `tests/lava/proc/lif/__init__.py` — AST and structural risk scan.
+- `tests/lava/proc/lif/test_models.py` — AST and structural risk scan.
+- `tests/lava/proc/lif/test_process.py` — AST and structural risk scan.
+- `tests/lava/proc/monitor/__init__.py` — AST and structural risk scan.
+- `tests/lava/proc/monitor/test_monitors.py` — AST and structural risk scan.
+- `tests/lava/proc/prodneuron/__init__.py` — AST and structural risk scan.
+- `tests/lava/proc/prodneuron/test_prod_neuron.py` — AST and structural risk scan.
+- `tests/lava/proc/resfire/__init__.py` — AST and structural risk scan.
+- `tests/lava/proc/resfire/test_resfire.py` — AST and structural risk scan.
+- `tests/lava/proc/rf/__init__.py` — AST and structural risk scan.
+- `tests/lava/proc/rf/test_models.py` — AST and structural risk scan.
+- `tests/lava/proc/rf/test_process.py` — AST and structural risk scan.
+- `tests/lava/proc/rf_iz/__init__.py` — AST and structural risk scan.
+- `tests/lava/proc/rf_iz/test_models.py` — AST and structural risk scan.
+- `tests/lava/proc/rf_iz/test_process.py` — AST and structural risk scan.
+- `tests/lava/proc/s4d/dA_complex.npy` — inventory and content classification.
+- `tests/lava/proc/s4d/dB_complex.npy` — inventory and content classification.
+- `tests/lava/proc/s4d/dC_complex.npy` — inventory and content classification.
+- `tests/lava/proc/s4d/s4d_A.dat.npy` — inventory and content classification.
+- `tests/lava/proc/s4d/s4d_B.dat.npy` — inventory and content classification.
+- `tests/lava/proc/s4d/s4d_C.dat.npy` — inventory and content classification.
+- `tests/lava/proc/s4d/test_models.py` — AST and structural risk scan.
+- `tests/lava/proc/s4d/test_process.py` — AST and structural risk scan.
+- `tests/lava/proc/s4d/utils.py` — AST and structural risk scan.
+- `tests/lava/proc/sdn/__init__.py` — AST and structural risk scan.
+- `tests/lava/proc/sdn/test_models.py` — AST and structural risk scan.
+- `tests/lava/proc/sdn/test_process.py` — AST and structural risk scan.
+- `tests/lava/proc/sparse/__init__.py` — AST and structural risk scan.
+- `tests/lava/proc/sparse/test_models.py` — AST and structural risk scan.
+- `tests/lava/proc/sparse/test_process.py` — AST and structural risk scan.
+- `tests/lava/proc/spiker/__init__.py` — AST and structural risk scan.
+- `tests/lava/proc/spiker/test_models.py` — AST and structural risk scan.
+- `tests/lava/test_utils/__init__.py` — AST and structural risk scan.
+- `tests/lava/test_utils/utils.py` — AST and structural risk scan.
+- `tests/lava/tutorials/__init__.py` — AST and structural risk scan.
+- `tests/lava/tutorials/test_tutorials-lva.py` — AST and structural risk scan.
+- `tests/lava/tutorials/test_tutorials.py` — AST and structural risk scan; focused review with cited finding.
+- `tests/lava/utils/__init__.py` — AST and structural risk scan.
+- `tests/lava/utils/test_loihi.py` — AST and structural risk scan.
+- `tests/lava/utils/test_plots.py` — AST and structural risk scan.
+- `tests/lava/utils/test_serialization.py` — AST and structural risk scan.
+- `tests/lava/utils/test_slurm.py` — AST and structural risk scan.
+- `tests/lava/utils/test_weightutils.py` — AST and structural risk scan.
+- `tutorials/LICENSE` — inventory and content classification.
+- `tutorials/end_to_end/convert_params.py` — AST and structural risk scan.
+- `tutorials/end_to_end/mnist_pretrained.npy` — inventory and content classification.
+- `tutorials/end_to_end/tutorial00_tour_through_lava.ipynb` — notebook JSON and cell source inventory; not executed.
+- `tutorials/end_to_end/tutorial01_mnist_digit_classification.ipynb` — notebook JSON and cell source inventory; not executed.
+- `tutorials/end_to_end/tutorial02_excitatory_inhibitory_network.ipynb` — notebook JSON and cell source inventory; not executed.
+- `tutorials/in_depth/clp/clp.py` — AST and structural risk scan.
+- `tutorials/in_depth/clp/datasets/coil_100_features/coil_100_features_effnet.npy` — inventory and content classification.
+- `tutorials/in_depth/clp/tutorial01_one-shot_learning_with_novelty_detection.ipynb` — notebook JSON and cell source inventory; not executed.
+- `tutorials/in_depth/clp/tutorial02_clp_on_coil100.ipynb` — notebook JSON and cell source inventory; not executed.
+- `tutorials/in_depth/clp/utils.py` — AST and structural risk scan.
+- `tutorials/in_depth/three_factor_learning/tutorial01_Reward_Modulated_STDP.ipynb` — notebook JSON and cell source inventory; not executed.
+- `tutorials/in_depth/three_factor_learning/utils.py` — AST and structural risk scan.
+- `tutorials/in_depth/tutorial01_installing_lava.ipynb` — notebook JSON and cell source inventory; not executed.
+- `tutorials/in_depth/tutorial02_processes.ipynb` — notebook JSON and cell source inventory; not executed.
+- `tutorials/in_depth/tutorial03_process_models.ipynb` — notebook JSON and cell source inventory; not executed.
+- `tutorials/in_depth/tutorial04_execution.ipynb` — notebook JSON and cell source inventory; not executed.
+- `tutorials/in_depth/tutorial05_connect_processes.ipynb` — notebook JSON and cell source inventory; not executed.
+- `tutorials/in_depth/tutorial06_hierarchical_processes.ipynb` — notebook JSON and cell source inventory; not executed.
+- `tutorials/in_depth/tutorial07_remote_memory_access.ipynb` — notebook JSON and cell source inventory; not executed.
+- `tutorials/in_depth/tutorial08_stdp.ipynb` — notebook JSON and cell source inventory; not executed.
+- `tutorials/in_depth/tutorial09_custom_learning_rules.ipynb` — notebook JSON and cell source inventory; not executed.
+- `tutorials/in_depth/tutorial10_sigma_delta_neurons.ipynb` — notebook JSON and cell source inventory; not executed.
+- `tutorials/in_depth/tutorial11_serialization.ipynb` — notebook JSON and cell source inventory; not executed.
+- `tutorials/in_depth/tutorial12_adaptive_neurons.ipynb` — notebook JSON and cell source inventory; not executed.
+- `tutorials/lava_va/Tutorial01-Fixed_point_dot_product.ipynb` — notebook JSON and cell source inventory; not executed.
+- `tutorials/lava_va/Tutorial02-Fixed_point_elementwise_product.ipynb` — notebook JSON and cell source inventory; not executed.
+- `tutorials/lava_va/Tutorial03-Normalization_network.ipynb` — notebook JSON and cell source inventory; not executed.
+- `tutorials/lava_va/Tutorial04-Creating_network_motifs.ipynb` — notebook JSON and cell source inventory; not executed.

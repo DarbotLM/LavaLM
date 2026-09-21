@@ -4,7 +4,7 @@
 
 import numpy as np
 import typing as ty
-from scipy.sparse import csr_matrix
+from scipy.sparse import eye as sparse_eye
 
 from lava.magma.core.process.ports.ports import InPort, OutPort
 from lava.magma.core.process.process import AbstractProcess
@@ -98,7 +98,7 @@ class AlgebraicVector(Network):
             # This import statement needs to be here to avoid a circular
             # import error
             from lava.networks.gradedvecnetwork import GradedSparse
-            weightsI = csr_matrix(np.eye(np.prod(self.shape)))
+            weightsI = sparse_eye(np.prod(self.shape), format="csr")
             I_syn = GradedSparse(weights=weightsI)
             other.out_port.connect(I_syn.in_port)
             I_syn.out_port.connect(self.in_port)

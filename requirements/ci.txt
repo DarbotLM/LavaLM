@@ -1,0 +1,10 @@
+# Reproducible CPU validation baseline; dependency modernization is F02.
+numpy==1.24.4
+scipy==1.10.1
+networkx==2.8.7
+asteval==1.0.9
+scikit-learn==1.5.2
+pytest==7.4.4
+pytest-cov==4.1.0
+matplotlib==3.7.5
+psutil==7.0.0

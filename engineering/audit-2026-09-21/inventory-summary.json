@@ -1,0 +1,22 @@
+{
+  "commit": "646fa535764c3b0bd1bf24b956aaf64561bf97f6",
+  "tracked_files": 342,
+  "python_files": 271,
+  "source_python_files": 139,
+  "notebooks": 22,
+  "source_lines": 29111,
+  "chunks": {
+    "01 Packaging and identity": 12,
+    "02 CI and governance": 10,
+    "03 Core API": 30,
+    "04 Compiler": 23,
+    "06 Channels": 3,
+    "07 Learning": 8,
+    "05 Runtime": 12,
+    "09 IO and networks": 12,
+    "08 Process library": 46,
+    "10 Utilities": 10,
+    "11 Tests and tutorials": 176
+  },
+  "ast_candidates": 402
+}

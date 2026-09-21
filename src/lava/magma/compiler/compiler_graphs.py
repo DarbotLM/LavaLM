@@ -74,7 +74,7 @@ class NodeAnnotation(Enum):
 
 
 def flatten_list_recursive(ll: ty.List) -> ty.List:
-    """Recursively flatten a list of lists.
+    """Flatten nested lists without consuming the Python recursion stack.
 
     Parameters
     ----------
@@ -86,15 +86,22 @@ def flatten_list_recursive(ll: ty.List) -> ty.List:
     ll : list
         Flattened list
 
-    Notes
-    -----
-    Taken from: https://stackabuse.com/python-how-to-flatten-list-of-lists/
+    The historical function name is retained for compatibility. Only lists
+    are expanded; tuples and other values remain leaves.
     """
-    if len(ll) == 0:
-        return ll
-    if isinstance(ll[0], list):
-        return flatten_list_recursive(ll[0]) + flatten_list_recursive(ll[1:])
-    return ll[:1] + flatten_list_recursive(ll[1:])
+    result = []
+    stack = [iter(ll)]
+    while stack:
+        try:
+            value = next(stack[-1])
+        except StopIteration:
+            stack.pop()
+            continue
+        if isinstance(value, list):
+            stack.append(iter(value))
+        else:
+            result.append(value)
+    return result
 
 
 def flatten_list_itertools(ll: ty.List) -> ty.List:

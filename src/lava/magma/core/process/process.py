@@ -226,6 +226,7 @@ class AbstractProcess(metaclass=ProcessPostInitCaller):
 
     def __enter__(self):
         """Executed when Process enters a "with" block of a context manager."""
+        return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         """Stop the runtime when exiting "with" block of a context manager."""
@@ -637,7 +638,9 @@ class Collection:
         return getattr(self, item)
 
     def __iter__(self):
-        return self
+        # Each traversal owns its position and snapshots membership. Nested
+        # traversals and early exits must not consume another iterator.
+        return iter(self.members)
 
     def __next__(self):
         self._iterator += 1

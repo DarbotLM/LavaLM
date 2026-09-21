@@ -4,6 +4,7 @@
 
 import numpy as np
 import typing as ty
+from scipy.sparse import eye as sparse_eye
 
 from lava.proc.graded.process import InvSqrt
 from lava.proc.graded.process import NormVecDelay
@@ -158,7 +159,7 @@ class GradedVec(AlgebraicVector):
             # Create the product network
             prod_layer = ProductVec(shape=self.shape, vth=1, exp=self.exp)
 
-            weightsI = np.eye(self.shape[0])
+            weightsI = sparse_eye(self.shape[0], format="csr")
 
             weights_A = GradedSparse(weights=weightsI)
             weights_B = GradedSparse(weights=weightsI)
