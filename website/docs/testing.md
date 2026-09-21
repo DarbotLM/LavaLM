@@ -24,7 +24,7 @@ These cases check nested/partial iteration, deep and wide flattening, context bi
 
 The audit revision was `646fa535764c3b0bd1bf24b956aaf64561bf97f6`. Its CPU suite, excluding tutorials, reported **340 passed, 312 failed, 5 skipped, and 4 teardown errors** in the review workspace. Captured child tracebacks showed socket creation denied during multiprocessing-manager startup. Failures clustered into startup EOFError and cleanup AttributeError. They are not evidence of 312 independent framework defects or a passing runtime baseline.
 
-Current validation is recorded in the [implementation ledger](engineering/implementation.md) and the pull request's checks. Never rewrite the historical baseline as a post-fix result.
+Hosted validation of implementation commit `d391cbdbaceb31204c3f31f8333992505c29ab5a` passed on Linux and macOS: **669 passed, 5 skipped, 72.68% coverage** on each platform. Details are recorded in the [implementation ledger](engineering/implementation.md) and the pull request's checks. Never rewrite the historical baseline as a post-fix result.
 
 ## Separate validation work
 

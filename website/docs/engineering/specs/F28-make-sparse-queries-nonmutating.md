@@ -2,9 +2,9 @@
 
 ## Maintenance batch status
 
-Explicit-zero queries work on a private copy. Tests cover read-only inputs, downstream exceptions, unsorted/duplicate storage and input preservation. Live sparse model integration remains a CI gate.
+Explicit-zero queries work on a private copy. Tests cover read-only inputs, downstream exceptions, unsorted/duplicate storage and input preservation. Hosted Linux/macOS CPU suites, including sparse model tests, now pass.
 
-Status: Implemented; integration validation pending. Priority: P1. Effort: S. Evidence: Reproduced.
+Status: Implemented; CPU CI verified. Priority: P1. Effort: S. Evidence: Reproduced.
 
 Audited revision: `646fa535764c3b0bd1bf24b956aaf64561bf97f6`. Reviewed 21 September 2026.
 

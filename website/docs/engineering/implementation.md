@@ -12,7 +12,7 @@ This ledger describes the first LavaLM foundation patch relative to audit revisi
 | Context managers | Process/Runtime bind self and call existing cleanup | Transactional initialization and bounded shutdown |
 | Networks | CSR identities without dense intermediates | Broader composition contracts and performance benchmarks |
 | Checkpoints | Consistent suffix fallback and member validation | Atomic writes, versioned portable format |
-| Sparse queries | No mutation of caller storage | Live model/learning integration confirmation |
+| Sparse queries | No mutation of caller storage | Broader sparse-format/performance contracts |
 | Automation | Owned CPU/package checks, critical Ruff checks, Bandit, docs build and Pages workflow | Notebook lane, broader lint/type baseline, release governance |
 | Documentation | Architecture, APIs, setup, migration, roadmap, all 32 specs and 12 review chunks | Update alongside subsequent implementation |
 
@@ -34,3 +34,11 @@ The Docusaurus production build passed with broken-link and anchor errors enable
 - Preserve SciPy sparse ordering/coalescing semantics through a private copy rather than introducing a new raw CSR traversal contract.
 - Keep numerical dependencies and Python 3.10 stable; dependency modernization has its own specification.
 - Remove inherited release credentials/targets and do not publish a package as part of maintenance validation.
+
+## Hosted validation completed
+
+At implementation commit `d391cbdbaceb31204c3f31f8333992505c29ab5a`, [CPU validation](https://github.com/DarbotLM/LavaLM/actions/runs/35577428502) passed on both Linux and macOS: **669 passed, 5 skipped, 72.68% coverage** on each platform. Both CPU smoke tests passed; selected Ruff checks and Bandit passed. The five skipped tests remain outside that result.
+
+[Package validation](https://github.com/DarbotLM/LavaLM/actions/runs/35577428521) passed build, independent wheel/sdist installation, and live CPU execution outside the checkout. [Documentation validation](https://github.com/DarbotLM/LavaLM/actions/runs/35577428519) passed and uploaded the preview artifact. Pages deployment was skipped as intended for a pull request. Browser visual QA remains unverified because the browser download failed.
+
+These hosted results establish a green CPU baseline for this patch. They do not erase the earlier workspace-specific failures, establish optional-hardware conformance, or complete the remaining specifications. This validation entry changes documentation/evidence only.

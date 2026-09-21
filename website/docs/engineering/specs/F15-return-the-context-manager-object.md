@@ -2,9 +2,9 @@
 
 ## Maintenance batch status
 
-Process and Runtime context managers return self. Bounded tests verify binding, cleanup calls, and propagation of body exceptions. Live startup/shutdown still requires hosted runtime validation.
+Process and Runtime context managers return self. Bounded tests verify binding, cleanup calls, and propagation of body exceptions. Hosted Linux/macOS CPU suites now pass; transactional startup/shutdown remains separate F13 work.
 
-Status: Implemented; integration validation pending. Priority: P2. Effort: S. Evidence: Reproduced for Runtime and source confirmed for Process.
+Status: Implemented; CPU CI verified. Priority: P2. Effort: S. Evidence: Reproduced for Runtime and source confirmed for Process.
 
 Audited revision: `646fa535764c3b0bd1bf24b956aaf64561bf97f6`. Reviewed 21 September 2026.
 

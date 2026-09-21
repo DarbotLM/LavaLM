@@ -718,7 +718,7 @@
     "risk": "Small independent API repair; do not make it depend on a wholesale runtime rewrite.",
     "dependencies": "None",
     "diagnostic": "R02",
-    "implementation_status": "Implemented; integration validation pending",
+    "implementation_status": "Implemented; CPU CI verified",
     "sources": [
       {
         "path": "src/lava/magma/runtime/runtime.py",
@@ -732,7 +732,7 @@
       }
     ],
     "filename": "F15-return-the-context-manager-object.md",
-    "implementation_note": "Process and Runtime context managers return self. Bounded tests verify binding, cleanup calls, and propagation of body exceptions. Live startup/shutdown still requires hosted runtime validation."
+    "implementation_note": "Process and Runtime context managers return self. Bounded tests verify binding, cleanup calls, and propagation of body exceptions. Hosted Linux/macOS CPU suites now pass; transactional startup/shutdown remains separate F13 work."
   },
   {
     "id": "F16",
@@ -1372,7 +1372,7 @@
     "risk": "A raw CSR traversal may expose duplicates that scipy.find previously coalesced. Nonmutation must not silently change this contract.",
     "dependencies": "None",
     "diagnostic": "U02 U03",
-    "implementation_status": "Implemented; integration validation pending",
+    "implementation_status": "Implemented; CPU CI verified",
     "sources": [
       {
         "path": "src/lava/utils/sparse.py",
@@ -1381,7 +1381,7 @@
       }
     ],
     "filename": "F28-make-sparse-queries-nonmutating.md",
-    "implementation_note": "Explicit-zero queries work on a private copy. Tests cover read-only inputs, downstream exceptions, unsorted/duplicate storage and input preservation. Live sparse model integration remains a CI gate."
+    "implementation_note": "Explicit-zero queries work on a private copy. Tests cover read-only inputs, downstream exceptions, unsorted/duplicate storage and input preservation. Hosted Linux/macOS CPU suites, including sparse model tests, now pass."
   },
   {
     "id": "F29",

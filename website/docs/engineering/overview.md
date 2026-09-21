@@ -6,7 +6,7 @@ The review is grouped into 12 subsystem chapters in the sidebar. Each specificat
 
 ## Priority and status
 
-P0 means required before a first fork release, not an exploit severity. P1 is near-term correctness/reliability; P2 is bounded improvement or conformance; P3 is future architecture. S/M/L are planning ranges, not delivery promises. “Partial” means only the work described in that specification's maintenance note is implemented. “Integration validation pending” explicitly excludes a claim of green live runtime tests.
+P0 means required before a first fork release, not an exploit severity. P1 is near-term correctness/reliability; P2 is bounded improvement or conformance; P3 is future architecture. S/M/L are planning ranges, not delivery promises. “Partial” means only the work described in that specification's maintenance note is implemented. “CPU CI verified” means the hosted CPU suite passed; it does not imply hardware or exhaustive numerical conformance.
 
 | Specification | Priority | Effort | Implementation status |
 |---|---|---|---|
@@ -24,7 +24,7 @@ P0 means required before a first fork release, not an exploit severity. P1 is ne
 | [F12 Use an explicit multiprocessing context](specs/F12-use-an-explicit-multiprocessing-context.md) | P1 | L | Proposed |
 | [F13 Make runtime startup and cleanup transactional](specs/F13-make-runtime-startup-and-cleanup-transactional.md) | P1 | L | Proposed |
 | [F14 Validate variable transactions and preserve data types](specs/F14-validate-variable-transactions-and-preserve-data-types.md) | P1 | M then L | Proposed |
-| [F15 Return the context manager object](specs/F15-return-the-context-manager-object.md) | P2 | S | Implemented; integration validation pending |
+| [F15 Return the context manager object](specs/F15-return-the-context-manager-object.md) | P2 | S | Implemented; CPU CI verified |
 | [F16 Define channel cancellation and thread ownership](specs/F16-define-channel-cancellation-and-thread-ownership.md) | P1 | M | Proposed |
 | [F17 Bound watchdog resource usage](specs/F17-bound-watchdog-resource-usage.md) | P2 | M | Proposed |
 | [F18 Validate learning parameters and make seeds reproducible](specs/F18-validate-learning-parameters-and-make-seeds-reproducible.md) | P1 | M | Proposed |
@@ -37,7 +37,7 @@ P0 means required before a first fork release, not an exploit severity. P1 is ne
 | [F25 Validate IO datasets and buffering contracts](specs/F25-validate-io-datasets-and-buffering-contracts.md) | P1 | S then M | Proposed |
 | [F26 Make monitor probe limits explicit](specs/F26-make-monitor-probe-limits-explicit.md) | P2 | S then M | Proposed |
 | [F27 Repair checkpoint paths and atomic persistence](specs/F27-repair-checkpoint-paths-and-atomic-persistence.md) | P1 | S then M | Partial |
-| [F28 Make sparse queries nonmutating](specs/F28-make-sparse-queries-nonmutating.md) | P1 | S | Implemented; integration validation pending |
+| [F28 Make sparse queries nonmutating](specs/F28-make-sparse-queries-nonmutating.md) | P1 | S | Implemented; CPU CI verified |
 | [F29 Make dataset download and storage explicit](specs/F29-make-dataset-download-and-storage-explicit.md) | P2 | M | Proposed |
 | [F30 Make tutorials finite portable and reproducible](specs/F30-make-tutorials-finite-portable-and-reproducible.md) | P2 | M | Partial |
 | [F31 Establish regression and performance evidence](specs/F31-establish-regression-and-performance-evidence.md) | P1 | M | Partial |
